@@ -275,9 +275,14 @@
     padding:13px 16px; border-radius:3px; font-size:0.92rem; font-weight:600; cursor:pointer;
   }
   .share-btn:active{transform:translateY(1px);}
+  .share-btn:disabled{background:var(--line); color:var(--ink-faint); cursor:not-allowed;}
+  .share-btn:disabled:active{transform:none;}
   .mbti-code{
-    font-family:'Fraunces', serif; font-size:2.4rem; font-weight:600; letter-spacing:0.04em;
-    margin:4px 0 4px;
+    font-family:'Fraunces', serif; font-size:1.9rem; font-weight:600; letter-spacing:0.01em;
+    margin:4px 0 2px;
+  }
+  .mbti-subtitle{
+    font-size:0.82rem; color:var(--ink-faint); margin:0 0 16px;
   }
 
   /* ---------- lounge ---------- */
@@ -339,6 +344,25 @@
   .temp-rank-item{display:flex; align-items:center; gap:10px; padding:11px 0; border-top:1px solid var(--line);}
   .temp-rank-item:first-child{border-top:none;}
   .temp-rank-medal{font-size:1.3rem;}
+
+  /* ---------- 회사 MBTI (OCAI 100점 배분) ---------- */
+  .ocai-rows{display:flex; flex-direction:column; gap:10px; margin-bottom:10px;}
+  .ocai-row{
+    display:flex; align-items:center; gap:12px;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-card);
+    padding:12px 14px;
+  }
+  .ocai-statement{flex:1; font-size:0.86rem; line-height:1.45; color:var(--ink-soft);}
+  .ocai-input-wrap{flex:none; display:flex; align-items:center; gap:4px;}
+  .ocai-input{
+    width:56px; text-align:center; padding:8px 4px; border:1px solid var(--line); border-radius:4px;
+    font-size:0.92rem; font-family:inherit; background:var(--paper); color:var(--ink);
+  }
+  .ocai-suffix{font-size:0.8rem; color:var(--ink-faint);}
+  .ocai-total{
+    text-align:center; font-size:0.86rem; font-weight:600; color:var(--moss); margin-bottom:14px;
+  }
+  .ocai-total-warn{color:var(--coral);}
 </style>
 </head>
 <body>
@@ -369,6 +393,7 @@
     <h1 class="page-title">내 진짜 시급 계산기</h1>
     <p class="lede">포괄임금제 아래, 야근을 포함해 실제로 받고 있는 시급을 계산해요. 계약서 숫자와 통장에 찍히는 숫자는 다를 수 있어요.</p>
     <p class="compose-note" style="text-align:left; margin-bottom:26px;">💡 <b>포괄임금제란?</b> 연장·야간·휴일수당을 미리 급여에 포함해서 계약하는 방식이에요. 문제는 실제로 일한 시간이 계약서에 정해둔 시간보다 많아도, 회사가 별도로 더 주지 않는 경우가 많다는 거예요.</p>
+    <p class="compose-note" style="text-align:left; margin-bottom:26px;">📍 계산 공식 자체는 근로기준법 기준이라 지역과 무관하게 똑같이 적용돼요. 성수동컴파스가 다른 점은, 계산 다음이에요 — 이 결과를 성수동에서 일하는 다른 사람들의 신호와 비교하고, 필요하면 익명으로 연결될 수 있어요.</p>
 
     <div class="card">
       <div class="field">
@@ -410,6 +435,7 @@
     <p class="eyebrow">045° 북동 — 3년치 청구 가능액</p>
     <h1 class="page-title">내가 못 받은 돈 계산기</h1>
     <p class="lede">젠틀몬스터 사례처럼, 연장근로수당이 제대로 계산·지급되지 않는 경우가 많아요. 대략 얼마를 못 받았을 수 있는지 가늠해봐요.</p>
+    <p class="compose-note" style="text-align:left; margin-bottom:26px;">📍 <b>성수동 실제 사례 기반</b> — 이 계산 공식은 성수동 소재 젠틀몬스터(아이아이컴바인드)에 대한 고용노동부 근로감독에서 실제 확인된 체불 사례(464명·약 4억 2,900만원, 1인 평균 92만원)를 바탕으로 만들었어요.</p>
 
     <div class="card">
       <div class="field">
@@ -458,7 +484,7 @@
   <section id="mbti">
     <p class="eyebrow">180° 정남 — 우리 회사의 기질</p>
     <h1 class="page-title">회사 MBTI</h1>
-    <p class="lede">네 가지 질문으로 지금 회사의 유형을 가볍게 진단해요. 결과는 재미로, 체크리스트는 참고로 써주세요.</p>
+    <p class="lede">Cameron &amp; Quinn의 조직문화진단도구(OCAI)를 그대로 따라, 6가지 항목마다 100점을 4개 문장에 나눠 배분해서 지금 회사의 문화를 진단해요. 정식 학술 도구 방식이라 3~5분 정도 걸려요.</p>
     <div class="card" id="mbtiCard"></div>
   </section>
 
@@ -572,7 +598,7 @@ trackEvent('tab_view', { tab_id: 'wage' });
 /* ---------------- 공유(회사 MBTI) ---------------- */
 function shareMbti(typeName, code){
   const shareUrl = window.location.href.split('#')[0] + '#mbti';
-  const shareText = '우리 회사는 '+code+' — "'+typeName+'"?\n나침반에서 우리 회사 MBTI 확인해보기';
+  const shareText = '우리 회사는 "'+typeName+'"?\n조직문화 이론(경쟁가치모형) 기준으로 나침반에서 우리 회사 유형 확인해보기';
   if (navigator.share) {
     navigator.share({ title: '회사 MBTI · 성수동컴파스', text: shareText, url: shareUrl })
       .then(()=> trackEvent('share_click', { method:'native', code:code }))
@@ -714,48 +740,127 @@ function answerRisk(v){ trackEvent('risk_question_answered', { question_index: r
 renderRisk();
 
 /* ---------------- 회사 MBTI ---------------- */
-const mbtiQuestions = [
-  {q:'야근, 얼마나 잦은 편인가요?', opts:[{t:'거의 없고 칼퇴가 기본이에요', letter:'F', flag:0},{t:'예고 없이 자주 붙잡혀요', letter:'O', flag:1}]},
-  {q:'회사 안에서 의견을 내면 어떤가요?', opts:[{t:'직급 상관없이 편하게 얘기해요', letter:'E', flag:0},{t:'윗사람 말이 곧 결론이에요', letter:'H', flag:1}]},
-  {q:'급여는 어떻게 들어오나요?', opts:[{t:'날짜에 딱 맞춰 정확히 들어와요', letter:'P', flag:0},{t:'밀리거나 액수가 안 맞을 때가 있어요', letter:'D', flag:1}]},
-  {q:'근로계약서, 어떻게 갖고 계세요?', opts:[{t:'서명본을 저도 갖고 있어요', letter:'C', flag:0},{t:'구두로만 얘기하고 끝났어요', letter:'U', flag:1}]},
+/* OCAI(Organizational Culture Assessment Instrument, Cameron & Quinn)의 6개 차원 구조를 그대로 따름.
+   각 차원마다 Clan/Adhocracy/Market/Hierarchy 4개 문장에 100점을 나눠 배분(ipsative scoring) —
+   원본 설문 문항의 표현을 그대로 옮기지 않고, 각 차원이 다루는 내용을 독자적으로 다시 서술함.
+   원본은 "지금(Now)"과 "바라는 회사(Preferred)" 두 번 측정하지만, 여기서는 Now만 다룸. */
+const ocaiDimensions = [
+  { name:'지배적 특성', statements:{
+      Clan:'가족 같은 분위기예요. 다들 서로의 개인적인 일까지 스스럼없이 나눠요.',
+      Adhocracy:'역동적이고 진취적인 분위기예요. 다들 위험을 감수하면서 새로운 걸 시도해요.',
+      Market:'결과 중심적인 분위기예요. 목표 달성과 성과가 최우선이에요.',
+      Hierarchy:'체계적이고 통제된 분위기예요. 공식적인 절차가 모든 걸 좌우해요.'
+  }},
+  { name:'조직 리더십', statements:{
+      Clan:'리더는 멘토·조언자에 가까워요. 구성원을 세심하게 챙겨요.',
+      Adhocracy:'리더는 혁신가·모험가에 가까워요. 새로운 시도를 이끌어요.',
+      Market:'리더는 목표지향적이고 냉철해요. 성과와 실행력을 강조해요.',
+      Hierarchy:'리더는 조정자·관리자에 가까워요. 효율과 원활한 운영을 중시해요.'
+  }},
+  { name:'구성원 관리 방식', statements:{
+      Clan:'팀워크, 합의, 구성원 참여를 중요하게 여겨요.',
+      Adhocracy:'개인의 위험 감수와 자유, 개성을 존중해요.',
+      Market:'경쟁과 높은 성과 요구가 당연시돼요.',
+      Hierarchy:'고용 안정성과 예측 가능성, 규정 준수를 중시해요.'
+  }},
+  { name:'조직을 묶는 힘', statements:{
+      Clan:'충성심과 서로에 대한 신뢰가 조직을 묶어요.',
+      Adhocracy:'혁신과 발전에 대한 몰입이 조직을 묶어요.',
+      Market:'목표 달성과 성과에 대한 강조가 조직을 묶어요.',
+      Hierarchy:'공식적인 규정과 정책이 조직을 묶어요.'
+  }},
+  { name:'전략적 강조점', statements:{
+      Clan:'구성원 성장, 신뢰, 개방성을 강조해요.',
+      Adhocracy:'새로운 자원 확보와 도전, 실험을 강조해요.',
+      Market:'경쟁에서 이기는 것과 시장 점유율을 강조해요.',
+      Hierarchy:'안정성과 효율, 원활한 운영을 강조해요.'
+  }},
+  { name:'성공의 기준', statements:{
+      Clan:'구성원에 대한 관심과 팀워크로 성공을 정의해요.',
+      Adhocracy:'가장 새롭고 독창적인 결과물로 성공을 정의해요.',
+      Market:'시장에서 이기고 경쟁자를 앞서는 것으로 성공을 정의해요.',
+      Hierarchy:'효율적이고 안정적인 운영으로 성공을 정의해요.'
+  }},
 ];
-const mbtiTypes = {
-  0:{name:'등대형', desc:'멀리서도 잘 보이는, 드물게 안정적인 일터예요. 지금의 조건을 잘 기록해두고 오래 지켜보세요.'},
-  1:{name:'항해 가능형', desc:'대체로 무난하지만 흐린 구간이 하나 있어요. 걸리는 지점만 짚어 개선을 요청해볼 만해요.'},
-  2:{name:'풍랑주의형', desc:'신호가 두 개 이상 겹쳐요. 수첩에 기록을 쌓아두고, 필요하면 상담 창구를 이용해보세요.'},
-  3:{name:'표류형', desc:'여러 위험 신호가 함께 나타났어요. 혼자 버티지 말고 SOS로 연결되는 상담을 꼭 받아보세요.'},
+const OCAI_TYPE_ORDER = ['Clan','Adhocracy','Market','Hierarchy'];
+const ocaiTypeInfo = {
+  Clan:{name:'관계지향형', desc:'동료 간의 유대와 팀워크를 가장 중요하게 여기는 곳이에요. 편안한 분위기는 좋지만, "가족 같다"는 말이 야근이나 사적인 요구의 핑계가 되고 있진 않은지 살펴보세요.'},
+  Adhocracy:{name:'혁신지향형', desc:'빠르게 움직이고 새로운 시도를 반기는 곳이에요. 자율성은 크지만, "알아서 하라"는 말이 명확한 기준 없이 책임만 떠넘기는 건 아닌지 확인해보세요.'},
+  Market:{name:'성과지향형', desc:'결과와 실적을 최우선으로 여기는 곳이에요. 목표가 뚜렷한 건 좋지만, 그 압박이 과도한 업무량이나 번아웃으로 이어지진 않는지 살펴보세요.'},
+  Hierarchy:{name:'위계지향형', desc:'규정과 절차가 뚜렷한 곳이에요. 예측 가능하다는 장점이 있지만, 그 규정이 노동자를 보호하기 위한 건지 그저 통제를 위한 건지 구분해보세요.'},
 };
-let mbtiIdx = 0, mbtiLetters = [], mbtiFlags = 0;
+let mbtiIdx = 0;
+let mbtiTotals = {Clan:0, Adhocracy:0, Market:0, Hierarchy:0};
+let mbtiCurrentAlloc = {Clan:25, Adhocracy:25, Market:25, Hierarchy:25};
 let mbtiStartedTracked = false;
+
 function renderMbti(){
   const el = document.getElementById('mbtiCard');
-  if(mbtiIdx >= mbtiQuestions.length){
-    const tier = mbtiFlags <= 0 ? 0 : mbtiFlags===1 ? 1 : mbtiFlags===2 ? 2 : 3;
-    const type = mbtiTypes[tier];
-    const code = mbtiLetters.join('');
+  if(mbtiIdx >= ocaiDimensions.length){
+    const avg = {};
+    OCAI_TYPE_ORDER.forEach(t=>{ avg[t] = Math.round(mbtiTotals[t] / ocaiDimensions.length); });
+    const dominant = OCAI_TYPE_ORDER.reduce((a,b)=> avg[a] >= avg[b] ? a : b);
+    const type = ocaiTypeInfo[dominant];
+    const barsHtml = OCAI_TYPE_ORDER.map(t=>
+      '<div class="temp-bar-row"><div class="temp-bar-label"><span>'+ocaiTypeInfo[t].name+' ('+t+')</span><span>'+avg[t]+'%</span></div>'+
+      '<div class="temp-bar-track"><div class="temp-bar-fill" style="width:'+avg[t]+'%"></div></div></div>'
+    ).join('');
     el.innerHTML = '<div class="quiz-result">'+
       '<div class="q-num">우리 회사는</div>'+
-      '<div class="mbti-code">'+code+'</div>'+
-      '<h3>'+type.name+'</h3>'+
-      '<p class="lede" style="margin-bottom:6px;">'+type.desc+'</p>'+
+      '<div class="mbti-code">'+type.name+'</div>'+
+      '<p class="mbti-subtitle">'+dominant+' 우세 · OCAI(Cameron &amp; Quinn) 24문항 기준</p>'+
+      barsHtml+
+      '<p class="lede" style="margin:16px 0 6px;">'+type.desc+'</p>'+
       '<button class="share-btn" onclick="showSection(\'wage\')">💰 내 진짜 시급 계산하기</button>'+
-      '<button class="restart-link" onclick="shareMbti(\''+type.name+'\',\''+code+'\')">결과 공유하기</button>'+
-      '<button class="restart-link" onclick="mbtiIdx=0;mbtiLetters=[];mbtiFlags=0;renderMbti();">다시 진단하기</button></div>';
-    trackEvent('mbti_complete', { code: code, type: type.name });
+      '<button class="restart-link" onclick="shareMbti(\''+type.name+'\',\''+dominant+'\')">결과 공유하기</button>'+
+      '<button class="restart-link" onclick="mbtiIdx=0;mbtiTotals={Clan:0,Adhocracy:0,Market:0,Hierarchy:0};renderMbti();">다시 진단하기</button></div>';
+    trackEvent('mbti_complete', { code: dominant, type: type.name });
     return;
   }
   if(mbtiIdx === 0 && !mbtiStartedTracked){ trackEvent('mbti_started', {}); mbtiStartedTracked = true; }
-  const q = mbtiQuestions[mbtiIdx];
+  mbtiCurrentAlloc = {Clan:25, Adhocracy:25, Market:25, Hierarchy:25};
+  const dim = ocaiDimensions[mbtiIdx];
   let bars = '';
-  for(let i=0;i<mbtiQuestions.length;i++) bars += '<i class="'+(i<mbtiIdx?'done':'')+'"></i>';
-  let opts = q.opts.map(o=>'<button class="q-opt" onclick="answerMbti(\''+o.letter+'\','+o.flag+')">'+o.t+'</button>').join('');
+  for(let i=0;i<ocaiDimensions.length;i++) bars += '<i class="'+(i<mbtiIdx?'done':'')+'"></i>';
+  const rows = OCAI_TYPE_ORDER.map(t=>
+    '<div class="ocai-row">'+
+      '<div class="ocai-statement">'+dim.statements[t]+'</div>'+
+      '<div class="ocai-input-wrap"><input type="number" class="ocai-input" id="ocaiInput_'+t+'" min="0" max="100" step="5" value="25" inputmode="numeric" oninput="updateOcaiTotal()"><span class="ocai-suffix">점</span></div>'+
+    '</div>'
+  ).join('');
   el.innerHTML = '<div class="q-progress">'+bars+'</div>'+
-    '<div class="q-num">질문 '+(mbtiIdx+1)+' / '+mbtiQuestions.length+'</div>'+
-    '<p class="q-text">'+q.q+'</p>'+
-    '<div class="q-options">'+opts+'</div>';
+    '<div class="q-num">차원 '+(mbtiIdx+1)+' / '+ocaiDimensions.length+' · '+dim.name+'</div>'+
+    '<p class="q-text" style="font-size:0.86rem; color:var(--ink-faint); margin-bottom:14px; font-weight:400;">아래 4개 문장에 어울리는 정도만큼, 합이 100이 되도록 점수를 나눠주세요.</p>'+
+    '<div class="ocai-rows">'+rows+'</div>'+
+    '<div class="ocai-total" id="ocaiTotalDisplay">합계: 100 / 100</div>'+
+    '<button class="share-btn" id="ocaiNextBtn" onclick="submitOcaiDimension()">다음</button>';
+  updateOcaiTotal();
 }
-function answerMbti(letter, flag){ trackEvent('mbti_question_answered', { question_index: mbtiIdx }); mbtiLetters.push(letter); mbtiFlags += flag; mbtiIdx++; renderMbti(); }
+function updateOcaiTotal(){
+  let total = 0;
+  OCAI_TYPE_ORDER.forEach(t=>{
+    const inputEl = document.getElementById('ocaiInput_'+t);
+    if(!inputEl) return;
+    let v = parseInt(inputEl.value, 10);
+    if(isNaN(v) || v < 0) v = 0;
+    if(v > 100) v = 100;
+    mbtiCurrentAlloc[t] = v;
+    total += v;
+  });
+  const totalEl = document.getElementById('ocaiTotalDisplay');
+  const btn = document.getElementById('ocaiNextBtn');
+  if(totalEl){
+    totalEl.textContent = '합계: ' + total + ' / 100';
+    totalEl.classList.toggle('ocai-total-warn', total !== 100);
+  }
+  if(btn) btn.disabled = (total !== 100);
+}
+function submitOcaiDimension(){
+  OCAI_TYPE_ORDER.forEach(t=>{ mbtiTotals[t] += mbtiCurrentAlloc[t]; });
+  trackEvent('mbti_question_answered', { question_index: mbtiIdx });
+  mbtiIdx++;
+  renderMbti();
+}
 renderMbti();
 
 /* ---------------- 성수 노동온도 (UI 로직 — Firestore 통신은 하단 module 스크립트에서 처리) ---------------- */
