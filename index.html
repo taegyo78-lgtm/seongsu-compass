@@ -344,25 +344,6 @@
   .temp-rank-item{display:flex; align-items:center; gap:10px; padding:11px 0; border-top:1px solid var(--line);}
   .temp-rank-item:first-child{border-top:none;}
   .temp-rank-medal{font-size:1.3rem;}
-
-  /* ---------- 회사 MBTI (OCAI 100점 배분) ---------- */
-  .ocai-rows{display:flex; flex-direction:column; gap:10px; margin-bottom:10px;}
-  .ocai-row{
-    display:flex; align-items:center; gap:12px;
-    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-card);
-    padding:12px 14px;
-  }
-  .ocai-statement{flex:1; font-size:0.86rem; line-height:1.45; color:var(--ink-soft);}
-  .ocai-input-wrap{flex:none; display:flex; align-items:center; gap:4px;}
-  .ocai-input{
-    width:56px; text-align:center; padding:8px 4px; border:1px solid var(--line); border-radius:4px;
-    font-size:0.92rem; font-family:inherit; background:var(--paper); color:var(--ink);
-  }
-  .ocai-suffix{font-size:0.8rem; color:var(--ink-faint);}
-  .ocai-total{
-    text-align:center; font-size:0.86rem; font-weight:600; color:var(--moss); margin-bottom:14px;
-  }
-  .ocai-total-warn{color:var(--coral);}
 </style>
 </head>
 <body>
@@ -484,7 +465,8 @@
   <section id="mbti">
     <p class="eyebrow">180° 정남 — 우리 회사의 기질</p>
     <h1 class="page-title">회사 MBTI</h1>
-    <p class="lede">Cameron &amp; Quinn의 조직문화진단도구(OCAI)를 그대로 따라, 6가지 항목마다 100점을 4개 문장에 나눠 배분해서 지금 회사의 문화를 진단해요. 정식 학술 도구 방식이라 3~5분 정도 걸려요.</p>
+    <p class="lede">우리 회사, 대체 어떤 곳일까? 6개 질문에 제일 "우리 회사스러운" 문장 딱 하나씩만 골라봐요. 1분이면 끝!</p>
+    <p class="compose-note" style="text-align:left; margin-bottom:26px;">💡 실제 경영학에서 조직문화를 나눌 때 쓰는 6가지 기준(OCAI)을 참고해서 간단하게 만들었어요.</p>
     <div class="card" id="mbtiCard"></div>
   </section>
 
@@ -745,119 +727,90 @@ renderRisk();
    원본 설문 문항의 표현을 그대로 옮기지 않고, 각 차원이 다루는 내용을 독자적으로 다시 서술함.
    원본은 "지금(Now)"과 "바라는 회사(Preferred)" 두 번 측정하지만, 여기서는 Now만 다룸. */
 const ocaiDimensions = [
-  { name:'지배적 특성', statements:{
-      Clan:'가족 같은 분위기예요. 다들 서로의 개인적인 일까지 스스럼없이 나눠요.',
-      Adhocracy:'역동적이고 진취적인 분위기예요. 다들 위험을 감수하면서 새로운 걸 시도해요.',
-      Market:'결과 중심적인 분위기예요. 목표 달성과 성과가 최우선이에요.',
-      Hierarchy:'체계적이고 통제된 분위기예요. 공식적인 절차가 모든 걸 좌우해요.'
+  { name:'지배적 특성', sub:'한마디로 분위기', statements:{
+      Clan:'완전 한 가족 분위기예요. 다들 서로 시시콜콜한 것까지 다 알아요.',
+      Adhocracy:'다이나믹 그 자체예요. 다들 일단 저질러보고 봐요.',
+      Market:'숫자가 전부예요. 목표 달성 아니면 의미 없다는 분위기예요.',
+      Hierarchy:'매뉴얼이 곧 법이에요. 정해진 대로만 움직여요.'
   }},
-  { name:'조직 리더십', statements:{
-      Clan:'리더는 멘토·조언자에 가까워요. 구성원을 세심하게 챙겨요.',
-      Adhocracy:'리더는 혁신가·모험가에 가까워요. 새로운 시도를 이끌어요.',
-      Market:'리더는 목표지향적이고 냉철해요. 성과와 실행력을 강조해요.',
-      Hierarchy:'리더는 조정자·관리자에 가까워요. 효율과 원활한 운영을 중시해요.'
+  { name:'조직 리더십', sub:'상사는 어떤 스타일?', statements:{
+      Clan:'상사가 츤데레 삼촌 같아요. 잔소리는 해도 다 챙겨줘요.',
+      Adhocracy:'상사 입버릇이 "일단 해봐"예요. 못 말리지만 밉지 않아요.',
+      Market:'상사는 숫자만 봐요. 결과 없으면 대화가 잘 안 통해요.',
+      Hierarchy:'상사는 절차의 화신이에요. 순서 건너뛰면 큰일 나요.'
   }},
-  { name:'구성원 관리 방식', statements:{
-      Clan:'팀워크, 합의, 구성원 참여를 중요하게 여겨요.',
-      Adhocracy:'개인의 위험 감수와 자유, 개성을 존중해요.',
-      Market:'경쟁과 높은 성과 요구가 당연시돼요.',
-      Hierarchy:'고용 안정성과 예측 가능성, 규정 준수를 중시해요.'
+  { name:'구성원 관리 방식', sub:'팀을 다루는 방식', statements:{
+      Clan:'다 같이 가자 주의예요. 혼자 튀면 은근 눈치 보여요.',
+      Adhocracy:'각자 알아서 소신껏! 자유롭지만 가끔 방치되는 느낌도 나요.',
+      Market:'꽤 치열해요. 실적 안 나오면 바로 티가 나요.',
+      Hierarchy:'규정대로만 하면 안전해요. 대신 재량은 별로 없어요.'
   }},
-  { name:'조직을 묶는 힘', statements:{
-      Clan:'충성심과 서로에 대한 신뢰가 조직을 묶어요.',
-      Adhocracy:'혁신과 발전에 대한 몰입이 조직을 묶어요.',
-      Market:'목표 달성과 성과에 대한 강조가 조직을 묶어요.',
-      Hierarchy:'공식적인 규정과 정책이 조직을 묶어요.'
+  { name:'조직을 묶는 힘', sub:'뭐가 우릴 붙잡고 있나', statements:{
+      Clan:'정(情)으로 굴러가요. 미운정 고운정 다 있어요.',
+      Adhocracy:'"우리가 뭔가 새로운 걸 만든다"는 그 텐션으로 버텨요.',
+      Market:'"이겨야 한다"는 목표의식이 다 같이 붙잡고 있는 힘이에요.',
+      Hierarchy:'규정집이 접착제예요. 그거 없으면 다 흩어질 것 같아요.'
   }},
-  { name:'전략적 강조점', statements:{
-      Clan:'구성원 성장, 신뢰, 개방성을 강조해요.',
-      Adhocracy:'새로운 자원 확보와 도전, 실험을 강조해요.',
-      Market:'경쟁에서 이기는 것과 시장 점유율을 강조해요.',
-      Hierarchy:'안정성과 효율, 원활한 운영을 강조해요.'
+  { name:'전략적 강조점', sub:'뭘 제일 신경 써요', statements:{
+      Clan:'사람 키우는 데 진심이에요. 신뢰와 소통을 최우선으로 여겨요.',
+      Adhocracy:'새로운 거 없나 늘 촉각을 곤두세워요. 도전이 일상이에요.',
+      Market:'경쟁사 이기는 데 올인해요. 시장 1등이 목표예요.',
+      Hierarchy:'흔들리지 않는 안정감이 최고의 가치예요.'
   }},
-  { name:'성공의 기준', statements:{
-      Clan:'구성원에 대한 관심과 팀워크로 성공을 정의해요.',
-      Adhocracy:'가장 새롭고 독창적인 결과물로 성공을 정의해요.',
-      Market:'시장에서 이기고 경쟁자를 앞서는 것으로 성공을 정의해요.',
-      Hierarchy:'효율적이고 안정적인 운영으로 성공을 정의해요.'
+  { name:'성공의 기준', sub:'뭘 잘했다고 쳐요', statements:{
+      Clan:'다 같이 잘 지내면, 그게 성공이에요.',
+      Adhocracy:'세상에 없던 걸 만들면, 그게 성공이에요.',
+      Market:'경쟁사보다 잘하면, 그게 성공이에요.',
+      Hierarchy:'삐걱거림 없이 굴러가면, 그게 성공이에요.'
   }},
 ];
 const OCAI_TYPE_ORDER = ['Clan','Adhocracy','Market','Hierarchy'];
 const ocaiTypeInfo = {
-  Clan:{name:'관계지향형', desc:'동료 간의 유대와 팀워크를 가장 중요하게 여기는 곳이에요. 편안한 분위기는 좋지만, "가족 같다"는 말이 야근이나 사적인 요구의 핑계가 되고 있진 않은지 살펴보세요.'},
-  Adhocracy:{name:'혁신지향형', desc:'빠르게 움직이고 새로운 시도를 반기는 곳이에요. 자율성은 크지만, "알아서 하라"는 말이 명확한 기준 없이 책임만 떠넘기는 건 아닌지 확인해보세요.'},
-  Market:{name:'성과지향형', desc:'결과와 실적을 최우선으로 여기는 곳이에요. 목표가 뚜렷한 건 좋지만, 그 압박이 과도한 업무량이나 번아웃으로 이어지진 않는지 살펴보세요.'},
-  Hierarchy:{name:'위계지향형', desc:'규정과 절차가 뚜렷한 곳이에요. 예측 가능하다는 장점이 있지만, 그 규정이 노동자를 보호하기 위한 건지 그저 통제를 위한 건지 구분해보세요.'},
+  Clan:{name:'관계지향형', desc:'완전 정 많은 회사예요! 근데 "가족 같다"는 말이 야근이나 사적인 부탁의 핑계로 쓰이고 있진 않은지 살짝 의심해보세요.'},
+  Adhocracy:{name:'혁신지향형', desc:'매일이 롤러코스터예요! 자유로운 건 좋은데, "알아서 해"가 사실은 책임 떠넘기기는 아닌지 체크해보세요.'},
+  Market:{name:'성과지향형', desc:'목표가 뚜렷해요! 근데 그 압박이 나를 갈아넣는 수준까지 가고 있진 않은지 살펴보세요.'},
+  Hierarchy:{name:'위계지향형', desc:'예측 가능해서 편해요! 근데 그 규정이 날 지켜주는 건지, 그냥 옭아매는 건지 구분해보세요.'},
 };
 let mbtiIdx = 0;
-let mbtiTotals = {Clan:0, Adhocracy:0, Market:0, Hierarchy:0};
-let mbtiCurrentAlloc = {Clan:25, Adhocracy:25, Market:25, Hierarchy:25};
+let mbtiTypeCount = {Clan:0, Adhocracy:0, Market:0, Hierarchy:0};
 let mbtiStartedTracked = false;
 
 function renderMbti(){
   const el = document.getElementById('mbtiCard');
   if(mbtiIdx >= ocaiDimensions.length){
-    const avg = {};
-    OCAI_TYPE_ORDER.forEach(t=>{ avg[t] = Math.round(mbtiTotals[t] / ocaiDimensions.length); });
-    const dominant = OCAI_TYPE_ORDER.reduce((a,b)=> avg[a] >= avg[b] ? a : b);
+    const pct = {};
+    OCAI_TYPE_ORDER.forEach(t=>{ pct[t] = Math.round((mbtiTypeCount[t] / ocaiDimensions.length) * 100); });
+    const dominant = OCAI_TYPE_ORDER.reduce((a,b)=> pct[a] >= pct[b] ? a : b);
     const type = ocaiTypeInfo[dominant];
     const barsHtml = OCAI_TYPE_ORDER.map(t=>
-      '<div class="temp-bar-row"><div class="temp-bar-label"><span>'+ocaiTypeInfo[t].name+' ('+t+')</span><span>'+avg[t]+'%</span></div>'+
-      '<div class="temp-bar-track"><div class="temp-bar-fill" style="width:'+avg[t]+'%"></div></div></div>'
+      '<div class="temp-bar-row"><div class="temp-bar-label"><span>'+ocaiTypeInfo[t].name+' ('+t+')</span><span>'+pct[t]+'%</span></div>'+
+      '<div class="temp-bar-track"><div class="temp-bar-fill" style="width:'+pct[t]+'%"></div></div></div>'
     ).join('');
     el.innerHTML = '<div class="quiz-result">'+
       '<div class="q-num">우리 회사는</div>'+
       '<div class="mbti-code">'+type.name+'</div>'+
-      '<p class="mbti-subtitle">'+dominant+' 우세 · OCAI(Cameron &amp; Quinn) 24문항 기준</p>'+
+      '<p class="mbti-subtitle">'+dominant+' 우세 · 학계에서 쓰는 진단법(OCAI) 기준</p>'+
       barsHtml+
       '<p class="lede" style="margin:16px 0 6px;">'+type.desc+'</p>'+
       '<button class="share-btn" onclick="showSection(\'wage\')">💰 내 진짜 시급 계산하기</button>'+
       '<button class="restart-link" onclick="shareMbti(\''+type.name+'\',\''+dominant+'\')">결과 공유하기</button>'+
-      '<button class="restart-link" onclick="mbtiIdx=0;mbtiTotals={Clan:0,Adhocracy:0,Market:0,Hierarchy:0};renderMbti();">다시 진단하기</button></div>';
+      '<button class="restart-link" onclick="mbtiIdx=0;mbtiTypeCount={Clan:0,Adhocracy:0,Market:0,Hierarchy:0};renderMbti();">다시 진단하기</button></div>';
     trackEvent('mbti_complete', { code: dominant, type: type.name });
     return;
   }
   if(mbtiIdx === 0 && !mbtiStartedTracked){ trackEvent('mbti_started', {}); mbtiStartedTracked = true; }
-  mbtiCurrentAlloc = {Clan:25, Adhocracy:25, Market:25, Hierarchy:25};
   const dim = ocaiDimensions[mbtiIdx];
   let bars = '';
   for(let i=0;i<ocaiDimensions.length;i++) bars += '<i class="'+(i<mbtiIdx?'done':'')+'"></i>';
-  const rows = OCAI_TYPE_ORDER.map(t=>
-    '<div class="ocai-row">'+
-      '<div class="ocai-statement">'+dim.statements[t]+'</div>'+
-      '<div class="ocai-input-wrap"><input type="number" class="ocai-input" id="ocaiInput_'+t+'" min="0" max="100" step="5" value="25" inputmode="numeric" oninput="updateOcaiTotal()"><span class="ocai-suffix">점</span></div>'+
-    '</div>'
-  ).join('');
+  let opts = OCAI_TYPE_ORDER.map(t=>'<button class="q-opt" onclick="answerMbti(\''+t+'\')">'+dim.statements[t]+'</button>').join('');
   el.innerHTML = '<div class="q-progress">'+bars+'</div>'+
-    '<div class="q-num">차원 '+(mbtiIdx+1)+' / '+ocaiDimensions.length+' · '+dim.name+'</div>'+
-    '<p class="q-text" style="font-size:0.86rem; color:var(--ink-faint); margin-bottom:14px; font-weight:400;">아래 4개 문장에 어울리는 정도만큼, 합이 100이 되도록 점수를 나눠주세요.</p>'+
-    '<div class="ocai-rows">'+rows+'</div>'+
-    '<div class="ocai-total" id="ocaiTotalDisplay">합계: 100 / 100</div>'+
-    '<button class="share-btn" id="ocaiNextBtn" onclick="submitOcaiDimension()">다음</button>';
-  updateOcaiTotal();
+    '<div class="q-num">'+(mbtiIdx+1)+' / '+ocaiDimensions.length+' · '+dim.name+' <span style="color:var(--ink-faint); font-weight:400;">('+dim.sub+')</span></div>'+
+    '<p class="q-text">우리 회사에 제일 가까운 문장 하나만 골라주세요!</p>'+
+    '<div class="q-options">'+opts+'</div>';
 }
-function updateOcaiTotal(){
-  let total = 0;
-  OCAI_TYPE_ORDER.forEach(t=>{
-    const inputEl = document.getElementById('ocaiInput_'+t);
-    if(!inputEl) return;
-    let v = parseInt(inputEl.value, 10);
-    if(isNaN(v) || v < 0) v = 0;
-    if(v > 100) v = 100;
-    mbtiCurrentAlloc[t] = v;
-    total += v;
-  });
-  const totalEl = document.getElementById('ocaiTotalDisplay');
-  const btn = document.getElementById('ocaiNextBtn');
-  if(totalEl){
-    totalEl.textContent = '합계: ' + total + ' / 100';
-    totalEl.classList.toggle('ocai-total-warn', total !== 100);
-  }
-  if(btn) btn.disabled = (total !== 100);
-}
-function submitOcaiDimension(){
-  OCAI_TYPE_ORDER.forEach(t=>{ mbtiTotals[t] += mbtiCurrentAlloc[t]; });
+function answerMbti(type){
   trackEvent('mbti_question_answered', { question_index: mbtiIdx });
+  mbtiTypeCount[type]++;
   mbtiIdx++;
   renderMbti();
 }
