@@ -467,7 +467,7 @@
       <button class="note-add" onclick="addNote()">기록 추가</button>
     </div>
     <div id="noteList"></div>
-    <p class="session-note">이 수첩은 지금 브라우저 세션에만 저장돼요. 중요한 기록은 따로 캡처해두는 걸 추천해요.</p>
+    <p class="session-note">이 수첩은 이 기기·이 브라우저에만 저장돼요. 서버로 전송되지 않고, 다른 사람에게 보이지도 않아요. 다만 브라우저 데이터를 지우면 함께 사라지니, 중요한 기록은 따로 캡처해두는 걸 추천해요.</p>
   </section>
 
 </main>
@@ -687,8 +687,22 @@ function renderMbti(){
 function answerMbti(letter, flag){ mbtiLetters.push(letter); mbtiFlags += flag; mbtiIdx++; renderMbti(); }
 renderMbti();
 
-/* ---------------- 수첩 ---------------- */
-let notes = [];
+/* ---------------- 수첩 (localStorage — 이 기기에만 저장, 서버로 전송 안 됨) ---------------- */
+const NOTES_STORAGE_KEY = 'compass_notes_v1';
+function loadNotes(){
+  try{
+    const raw = localStorage.getItem(NOTES_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){
+    // 프라이빗 브라우징 등으로 localStorage를 못 쓰는 경우, 이번 세션에서만 동작
+    return [];
+  }
+}
+function saveNotes(){
+  try{ localStorage.setItem(NOTES_STORAGE_KEY, JSON.stringify(notes)); }
+  catch(e){ /* 저장 실패해도 화면 표시는 계속 되도록 조용히 무시 */ }
+}
+let notes = loadNotes();
 function renderNotes(){
   const list = document.getElementById('noteList');
   if(notes.length===0){ list.innerHTML = '<p class="empty-state">아직 기록이 없어요. 오늘 있었던 일을 한 줄이라도 남겨보세요.</p>'; return; }
@@ -703,6 +717,7 @@ function addNote(){
   notes.unshift({date, text: text.replace(/</g,'&lt;')});
   input.value='';
   renderNotes();
+  saveNotes();
   trackEvent('note_added', {}); // 내용은 전송하지 않고, 기록했다는 사실만 집계
 }
 renderNotes();
