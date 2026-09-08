@@ -9,16 +9,15 @@
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
 
 <!-- ===== 방문/전환 추적 (GA4) =====
-  아래 G-XXXXXXXXXX 두 곳을 analytics.google.com 에서 무료로 발급받은
-  본인의 GA4 측정 ID로 바꿔주세요. 개인 식별 정보는 수집하지 않고,
-  탭 조회수·퀴즈 완료·공유 클릭 같은 "익명 집계" 이벤트만 남습니다.
+  측정 ID G-6RK4FNKLHW 사용 중 (Firebase 프로젝트 생성 시 자동 연결된 GA4 속성).
+  개인 식별 정보는 담지 않고, 탭 조회수·퀴즈 완료·공유 클릭 같은 "익명 집계" 이벤트만 남깁니다.
 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6RK4FNKLHW"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){ dataLayer.push(arguments); }
   gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true, allow_google_signals: false });
+  gtag('config', 'G-6RK4FNKLHW', { anonymize_ip: true, allow_google_signals: false });
   // 개인정보를 담지 않는 간단한 이벤트 로깅 헬퍼. GA4 스크립트가 아직 로드되기 전이거나
   // 광고 차단기 때문에 gtag가 없을 때도 페이지가 죽지 않도록 try/catch로 감쌉니다.
   function trackEvent(name, params){
@@ -778,3 +777,4 @@ renderNotes();
 </script>
 </body>
 </html>
+
