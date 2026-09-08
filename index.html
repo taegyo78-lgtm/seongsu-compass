@@ -294,16 +294,34 @@
     display:inline-block; font-size:0.72rem; background:var(--paper-deep);
     color:var(--ink-soft); padding:2px 8px; border-radius:var(--radius-pill); margin-bottom:8px;
   }
+  .post-actions{ display:flex; align-items:center; gap:14px; margin-top:10px; }
+  .like-btn{
+    background:none; border:none; color:var(--ink-faint); font-size:0.8rem;
+    cursor:pointer; padding:0; display:flex; align-items:center; gap:4px;
+  }
+  .like-btn.liked{ color:var(--coral); cursor:default; }
   .comment-toggle{
     background:none; border:none; color:var(--brass); font-size:0.78rem;
-    cursor:pointer; padding:0; margin-top:10px; text-decoration:underline;
+    cursor:pointer; padding:0; text-decoration:underline;
   }
   .comment-box{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
-  .comment-list{ display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
+  .comment-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:8px; }
   .comment-item{
     font-size:0.82rem; color:var(--ink-soft); background:var(--paper);
     border-radius:4px; padding:8px 10px; line-height:1.45;
   }
+  .comment-actions{ display:flex; align-items:center; gap:12px; margin-top:6px; }
+  .comment-actions .like-btn{ font-size:0.74rem; }
+  .reply-toggle{
+    background:none; border:none; color:var(--brass); font-size:0.74rem;
+    cursor:pointer; padding:0; text-decoration:underline;
+  }
+  .reply-list{ display:flex; flex-direction:column; gap:6px; margin:8px 0 0 16px; }
+  .reply-item{
+    font-size:0.78rem; color:var(--ink-soft); background:var(--card);
+    border-radius:4px; padding:7px 9px; line-height:1.4; border-left:2px solid var(--line);
+  }
+  .reply-compose{ display:flex; gap:6px; margin:8px 0 0 16px; }
   .comment-compose{ display:flex; gap:6px; }
   .comment-input{
     flex:1; padding:8px 10px; border:1px solid var(--line); border-radius:4px;
@@ -998,6 +1016,23 @@ function goToLoungeFromTemperature(){
 renderIssueGrid();
 
 /* ---------------- 수첩 (localStorage — 이 기기에만 저장, 서버로 전송 안 됨) ---------------- */
+/* ---------------- 좋아요: 이 기기가 이미 눌렀는지 localStorage로만 기억 ----------------
+   계정이 없어서 "한 사람이 한 번만"을 서버가 보장할 순 없음 — 브라우저 데이터를 지우거나
+   다른 기기로 오면 다시 누를 수 있음. 완벽한 중복방지가 아니라 "가벼운 매너 장치" 정도로 이해. */
+const LIKED_STORAGE_KEY = 'compass_liked_v1';
+function getLikedSet(){
+  try{ return new Set(JSON.parse(localStorage.getItem(LIKED_STORAGE_KEY)) || []); }
+  catch(e){ return new Set(); }
+}
+function markLiked(key){
+  try{
+    const s = getLikedSet();
+    s.add(key);
+    localStorage.setItem(LIKED_STORAGE_KEY, JSON.stringify(Array.from(s)));
+  }catch(e){ /* 저장 실패해도 화면 갱신은 계속 진행 */ }
+}
+function isLiked(key){ return getLikedSet().has(key); }
+
 const NOTES_STORAGE_KEY = 'compass_notes_v1';
 function loadNotes(){
   try{
@@ -1059,7 +1094,7 @@ renderNotes();
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import {
     getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp,
-    where, getDocs
+    where, getDocs, doc, updateDoc, increment
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -1185,9 +1220,16 @@ renderNotes();
       const dateStr = when.getFullYear()+'.'+String(when.getMonth()+1).padStart(2,'0')+'.'+String(when.getDate()).padStart(2,'0');
       const safeTag = (d.tag || '익명').replace(/</g,'&lt;');
       const safeText = (d.text || '').replace(/</g,'&lt;');
+      const likeCount = d.likeCount || 0;
+      const commentCount = d.commentCount || 0;
+      const likedKey = 'post_'+id;
+      const liked = typeof isLiked === 'function' && isLiked(likedKey);
       return '<div class="post">'+
         '<span class="post-tag">'+safeTag+'</span><div class="post-meta">'+dateStr+'</div><p class="post-body">'+safeText+'</p>'+
-        '<button class="comment-toggle" onclick="toggleComments(\''+id+'\')">💬 댓글</button>'+
+        '<div class="post-actions">'+
+          '<button class="like-btn'+(liked?' liked':'')+'" id="likeBtn_'+id+'" '+(liked?'disabled':'')+' onclick="likePost(\''+id+'\')">'+(liked?'❤️':'🤍')+' <span id="likeCount_'+id+'">'+likeCount+'</span></button>'+
+          '<button class="comment-toggle" onclick="toggleComments(\''+id+'\')">💬 댓글 '+commentCount+'</button>'+
+        '</div>'+
         '<div class="comment-box" id="commentBox_'+id+'" style="display:none;">'+
           '<div class="comment-list" id="commentList_'+id+'"></div>'+
           '<div class="comment-compose">'+
@@ -1205,22 +1247,46 @@ renderNotes();
 
   /* ---------------- 라운지 댓글: lounge_posts/{postId}/comments 서브컬렉션 ----------------
      펼칠 때만 불러오는 방식(1회성 조회)으로, 모든 게시물의 댓글을 항상 구독하지 않아 읽기 비용을 아낌 */
+  function renderCommentNode(postId, c, isReply){
+    const safeText = (c.text || '').replace(/</g,'&lt;');
+    const likeCount = c.likeCount || 0;
+    const likedKey = 'comment_'+c.id;
+    const liked = isLiked(likedKey);
+    const cls = isReply ? 'reply-item' : 'comment-item';
+    let html = '<div class="'+cls+'" id="comment_'+c.id+'">'+safeText+
+      '<div class="comment-actions">'+
+        '<button class="like-btn'+(liked?' liked':'')+'" id="likeBtn_c_'+c.id+'" '+(liked?'disabled':'')+' onclick="likeComment(\''+postId+'\',\''+c.id+'\')">'+(liked?'❤️':'🤍')+' <span id="likeCount_c_'+c.id+'">'+likeCount+'</span></button>';
+    if(!isReply){
+      html += '<button class="reply-toggle" onclick="toggleReplyBox(\''+c.id+'\')">답글</button>';
+    }
+    html += '</div>';
+    if(!isReply){
+      html += '<div class="reply-list" id="replyList_'+c.id+'">'+(c.replies||[]).map(r=>renderCommentNode(postId, r, true)).join('')+'</div>';
+      html += '<div class="reply-compose" id="replyBox_'+c.id+'" style="display:none;">'+
+        '<input type="text" class="comment-input" id="replyInput_'+c.id+'" maxlength="200" placeholder="답글을 남겨보세요">'+
+        '<button class="comment-submit" onclick="submitReply(\''+postId+'\',\''+c.id+'\')">등록</button>'+
+      '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
   async function loadComments(postId){
     const listEl = document.getElementById('commentList_'+postId);
     if(!listEl) return;
     listEl.innerHTML = '<p class="empty-state" style="font-size:0.78rem; padding:6px 0;">불러오는 중...</p>';
     try{
       const commentsCol = collection(db, 'lounge_posts', postId, 'comments');
-      const commentsQuery = query(commentsCol, orderBy('createdAt', 'asc'), limit(100));
+      const commentsQuery = query(commentsCol, orderBy('createdAt', 'asc'), limit(200));
       const snap = await getDocs(commentsQuery);
       if(snap.empty){
         listEl.innerHTML = '<p class="empty-state" style="font-size:0.78rem; padding:6px 0;">아직 댓글이 없어요. 첫 댓글을 남겨보세요.</p>';
         return;
       }
-      listEl.innerHTML = snap.docs.map(d=>{
-        const safeText = (d.data().text || '').replace(/</g,'&lt;');
-        return '<div class="comment-item">'+safeText+'</div>';
-      }).join('');
+      const all = snap.docs.map(d=>({ id: d.id, ...d.data() }));
+      const topLevel = all.filter(c=>!c.parentId);
+      topLevel.forEach(c=>{ c.replies = all.filter(r=>r.parentId===c.id); });
+      listEl.innerHTML = topLevel.map(c=>renderCommentNode(postId, c, false)).join('');
     }catch(e){
       console.error(e);
       listEl.innerHTML = '<p class="empty-state" style="font-size:0.78rem; padding:6px 0;">댓글을 불러오지 못했어요.</p>';
@@ -1231,10 +1297,14 @@ renderNotes();
     if(!box) return;
     const wasHidden = box.style.display === 'none' || !box.style.display;
     box.style.display = wasHidden ? '' : 'none';
-    if(wasHidden && !box.dataset.loaded){
+    if(wasHidden){
       box.dataset.loaded = '1';
-      loadComments(postId);
+      loadComments(postId); // 좋아요/답글 반영 위해 펼칠 때마다 새로 불러옴
     }
+  };
+  window.toggleReplyBox = function(commentId){
+    const box = document.getElementById('replyBox_'+commentId);
+    if(box) box.style.display = (box.style.display === 'none' || !box.style.display) ? '' : 'none';
   };
   window.submitComment = async function(postId){
     const inputEl = document.getElementById('commentInput_'+postId);
@@ -1245,12 +1315,65 @@ renderNotes();
     try{
       const commentsCol = collection(db, 'lounge_posts', postId, 'comments');
       await addDoc(commentsCol, { text, createdAt: serverTimestamp() });
+      await updateDoc(doc(db, 'lounge_posts', postId), { commentCount: increment(1) });
       inputEl.value = '';
       if (typeof trackEvent === 'function') trackEvent('lounge_comment_added', {});
       await loadComments(postId);
     }catch(e){
       console.error(e);
       alert('댓글 등록에 실패했어요. 잠시 후 다시 시도해주세요.');
+    }
+  };
+  window.submitReply = async function(postId, parentId){
+    const inputEl = document.getElementById('replyInput_'+parentId);
+    if(!inputEl) return;
+    const text = inputEl.value.trim();
+    if(!text) return;
+    if(text.length > 200){ alert('200자 이내로 적어주세요.'); return; }
+    try{
+      const commentsCol = collection(db, 'lounge_posts', postId, 'comments');
+      await addDoc(commentsCol, { text, parentId, createdAt: serverTimestamp() });
+      await updateDoc(doc(db, 'lounge_posts', postId), { commentCount: increment(1) });
+      inputEl.value = '';
+      if (typeof trackEvent === 'function') trackEvent('lounge_reply_added', {});
+      await loadComments(postId);
+    }catch(e){
+      console.error(e);
+      alert('답글 등록에 실패했어요. 잠시 후 다시 시도해주세요.');
+    }
+  };
+
+  /* ---------------- 좋아요: 게시글/댓글 (Firestore increment, 1인당 1회는 localStorage로만 방지) ---------------- */
+  window.likePost = async function(postId){
+    const key = 'post_'+postId;
+    if(isLiked(key)) return;
+    const btn = document.getElementById('likeBtn_'+postId);
+    const countEl = document.getElementById('likeCount_'+postId);
+    if(btn){ btn.disabled = true; } // 응답 오기 전에 중복클릭 방지
+    try{
+      await updateDoc(doc(db, 'lounge_posts', postId), { likeCount: increment(1) });
+      markLiked(key);
+      if(btn){ btn.classList.add('liked'); btn.innerHTML = '❤️ <span id="likeCount_'+postId+'">'+((countEl?parseInt(countEl.textContent,10):0)+1)+'</span>'; }
+      if (typeof trackEvent === 'function') trackEvent('lounge_post_liked', {});
+    }catch(e){
+      console.error(e);
+      if(btn){ btn.disabled = false; }
+    }
+  };
+  window.likeComment = async function(postId, commentId){
+    const key = 'comment_'+commentId;
+    if(isLiked(key)) return;
+    const btn = document.getElementById('likeBtn_c_'+commentId);
+    const countEl = document.getElementById('likeCount_c_'+commentId);
+    if(btn){ btn.disabled = true; }
+    try{
+      await updateDoc(doc(db, 'lounge_posts', postId, 'comments', commentId), { likeCount: increment(1) });
+      markLiked(key);
+      if(btn){ btn.classList.add('liked'); btn.innerHTML = '❤️ <span id="likeCount_c_'+commentId+'">'+((countEl?parseInt(countEl.textContent,10):0)+1)+'</span>'; }
+      if (typeof trackEvent === 'function') trackEvent('lounge_comment_liked', {});
+    }catch(e){
+      console.error(e);
+      if(btn){ btn.disabled = false; }
     }
   };
 
