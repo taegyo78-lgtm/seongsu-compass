@@ -316,6 +316,29 @@
     font-size:0.76rem; color:var(--ink-faint);
   }
   .foot-resources a{ color:var(--ink-soft); text-decoration:underline; }
+
+  /* ---------- 성수 노동온도 ---------- */
+  .mood-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:8px;}
+  .mood-btn{
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-card);
+    padding:14px 4px; font-size:1.6rem; cursor:pointer; color:var(--ink);
+  }
+  .mood-btn span{font-size:0.66rem; color:var(--ink-soft); font-weight:600;}
+  .mood-btn.selected{border-color:var(--coral); background:var(--coral-soft);}
+  .issue-grid{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .issue-chip{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-pill);
+    padding:9px 15px; font-size:0.82rem; cursor:pointer; color:var(--ink-soft);
+  }
+  .issue-chip.selected{border-color:var(--brass); background:var(--brass-soft); color:var(--ink); font-weight:600;}
+  .temp-bar-row{margin-bottom:14px;}
+  .temp-bar-label{display:flex; justify-content:space-between; font-size:0.88rem; margin-bottom:5px;}
+  .temp-bar-track{background:var(--paper-deep); border-radius:var(--radius-pill); height:10px; overflow:hidden;}
+  .temp-bar-fill{background:var(--coral); height:100%;}
+  .temp-rank-item{display:flex; align-items:center; gap:10px; padding:11px 0; border-top:1px solid var(--line);}
+  .temp-rank-item:first-child{border-top:none;}
+  .temp-rank-medal{font-size:1.3rem;}
 </style>
 </head>
 <body>
@@ -345,6 +368,7 @@
     <p class="eyebrow">000° 정북 — 지금 내 위치</p>
     <h1 class="page-title">내 진짜 시급 계산기</h1>
     <p class="lede">포괄임금제 아래, 야근을 포함해 실제로 받고 있는 시급을 계산해요. 계약서 숫자와 통장에 찍히는 숫자는 다를 수 있어요.</p>
+    <p class="compose-note" style="text-align:left; margin-bottom:26px;">💡 <b>포괄임금제란?</b> 연장·야간·휴일수당을 미리 급여에 포함해서 계약하는 방식이에요. 문제는 실제로 일한 시간이 계약서에 정해둔 시간보다 많아도, 회사가 별도로 더 주지 않는 경우가 많다는 거예요.</p>
 
     <div class="card">
       <div class="field">
@@ -378,6 +402,7 @@
       <div class="result-value" id="wageResult">₩0</div>
       <div class="result-compare" id="wageCompare"></div>
     </div>
+    <button class="share-btn" onclick="showSection('temperature')">🌡 다른 사람들은 얼마나 일할까?</button>
   </section>
 
   <!-- ===== 못받은 돈 계산기 ===== -->
@@ -412,6 +437,7 @@
       <div class="result-value" id="upResult">₩0</div>
       <div class="result-compare" id="upCompare"></div>
     </div>
+    <button class="share-btn" onclick="showSection('temperature')">🌡 비슷한 경험이 있는지 보기</button>
 
     <p class="compose-note" style="margin-top:16px; text-align:left;">
       ⚠️ 법률 자문이 아닌 <b>참고용 추정치</b>예요. 통상시급 × 1.5배(근로기준법 제56조) 기준으로만 계산했고, 야간·휴일수당·지연이자는 포함하지 않았어요.
@@ -434,6 +460,37 @@
     <h1 class="page-title">회사 MBTI</h1>
     <p class="lede">네 가지 질문으로 지금 회사의 유형을 가볍게 진단해요. 결과는 재미로, 체크리스트는 참고로 써주세요.</p>
     <div class="card" id="mbtiCard"></div>
+  </section>
+
+  <!-- ===== 성수 노동온도 ===== -->
+  <section id="temperature">
+    <p class="eyebrow">225° 남동 — 오늘의 신호</p>
+    <h1 class="page-title">성수 노동온도</h1>
+    <p class="lede">오늘 하루 어땠어요? 익명으로 남기면 이번 주 성수동 노동자들의 신호에 더해져요.</p>
+
+    <div class="card" id="tempFormCard">
+      <div class="field">
+        <label>오늘 일은 어땠나요?</label>
+        <div class="mood-grid" id="moodGrid">
+          <button type="button" class="mood-btn" data-mood="good">🙂<span>괜찮았어요</span></button>
+          <button type="button" class="mood-btn" data-mood="neutral">😐<span>그냥 그랬어요</span></button>
+          <button type="button" class="mood-btn" data-mood="hard">😩<span>힘들었어요</span></button>
+          <button type="button" class="mood-btn" data-mood="very_hard">🤯<span>정말 힘들었어요</span></button>
+        </div>
+      </div>
+      <div class="field">
+        <label>무엇이 가장 힘들었나요? (복수 선택 가능)</label>
+        <div class="issue-grid" id="issueGrid"></div>
+      </div>
+      <div class="field">
+        <label for="tempComment">오늘 있었던 일을 한마디로 남겨보세요 (선택, 최대 200자)</label>
+        <textarea id="tempComment" maxlength="200" placeholder="예: 오늘도 퇴근하자마자 단톡방에 일이 올라왔어요."></textarea>
+      </div>
+      <button class="share-btn" id="tempSubmitBtn" onclick="submitTemperature()" disabled>오늘의 노동 남기기</button>
+      <button class="restart-link" onclick="showTemperatureResult()">제출 안 하고 이번 주 결과만 보기</button>
+    </div>
+
+    <div class="card" id="tempResultCard" style="display:none;"></div>
   </section>
 
   <!-- ===== 라운지 ===== -->
@@ -486,6 +543,7 @@ const sections = [
   {id:'unpaid', deg:'045°', label:'못받은 돈 계산기'},
   {id:'risk', deg:'090°', label:'위험도 진단'},
   {id:'mbti', deg:'180°', label:'회사 MBTI'},
+  {id:'temperature', deg:'225°', label:'노동온도'},
   {id:'lounge', deg:'270°', label:'라운지'},
   {id:'notebook', deg:'—', label:'수첩'},
 ];
@@ -506,6 +564,7 @@ function showSection(id){
   document.getElementById('needle').style.transform = 'rotate('+deg+'deg)';
   window.scrollTo({top:0, behavior:'smooth'});
   trackEvent('tab_view', { tab_id: id });
+  if(id === 'temperature') enterTemperatureForm();
 }
 // 최초 진입 시(기본 탭 '시급 계산기') 조회도 한 번 기록
 trackEvent('tab_view', { tab_id: 'wage' });
@@ -629,6 +688,7 @@ function renderRisk(){
     el.innerHTML = '<div class="quiz-result"><span class="risk-badge '+cls+'">위험도 '+level+'</span>'+
       '<h3>진단 점수 '+riskScore+' / 10</h3>'+
       '<p class="lede" style="margin-bottom:6px;">'+msg+'</p>'+
+      '<button class="share-btn" onclick="showSection(\'temperature\')">🌡 다른 사람들의 노동 신호 보기</button>'+
       '<button class="restart-link" onclick="riskIdx=0;riskScore=0;renderRisk();">다시 진단하기</button></div>';
     trackEvent('risk_complete', { level: level });
     return;
@@ -670,7 +730,8 @@ function renderMbti(){
       '<div class="mbti-code">'+code+'</div>'+
       '<h3>'+type.name+'</h3>'+
       '<p class="lede" style="margin-bottom:6px;">'+type.desc+'</p>'+
-      '<button class="share-btn" onclick="shareMbti(\''+type.name+'\',\''+code+'\')">결과 공유하기</button>'+
+      '<button class="share-btn" onclick="showSection(\'wage\')">💰 내 진짜 시급 계산하기</button>'+
+      '<button class="restart-link" onclick="shareMbti(\''+type.name+'\',\''+code+'\')">결과 공유하기</button>'+
       '<button class="restart-link" onclick="mbtiIdx=0;mbtiLetters=[];mbtiFlags=0;renderMbti();">다시 진단하기</button></div>';
     trackEvent('mbti_complete', { code: code, type: type.name });
     return;
@@ -686,6 +747,108 @@ function renderMbti(){
 }
 function answerMbti(letter, flag){ mbtiLetters.push(letter); mbtiFlags += flag; mbtiIdx++; renderMbti(); }
 renderMbti();
+
+/* ---------------- 성수 노동온도 (UI 로직 — Firestore 통신은 하단 module 스크립트에서 처리) ---------------- */
+const MOOD_LABELS = { good:'🙂 괜찮았어요', neutral:'😐 그냥 그랬어요', hard:'😩 힘들었어요', very_hard:'🤯 정말 힘들었어요' };
+const ISSUE_LABELS = {
+  overtime:'야근', after_hours_contact:'퇴근 후 연락', understaffing:'인력 부족',
+  emotional_labor:'감정노동', break_time:'휴게시간', supervisor:'상사와의 관계',
+  wage:'임금', contract:'계약', workload:'업무량', other:'기타'
+};
+const TEMP_MIN_RESPONSES = 5; // 이보다 적으면 비율 대신 "모으는 중" 상태로 표시
+let tempSelectedMood = null;
+let tempSelectedIssues = new Set();
+let tempStartedTracked = false;
+
+function getDateKey(d){
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function getWeekKey(d){
+  // ISO 8601 주차 계산 (월요일 시작, 해당 주의 목요일이 속한 연도를 기준으로 함)
+  const dt = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const dayNum = (dt.getUTCDay() + 6) % 7;
+  dt.setUTCDate(dt.getUTCDate() - dayNum + 3);
+  const firstThursday = new Date(Date.UTC(dt.getUTCFullYear(), 0, 4));
+  const firstDayNum = (firstThursday.getUTCDay() + 6) % 7;
+  firstThursday.setUTCDate(firstThursday.getUTCDate() - firstDayNum + 3);
+  const weekNum = 1 + Math.round((dt - firstThursday) / (7*24*3600*1000));
+  return dt.getUTCFullYear() + '-W' + String(weekNum).padStart(2,'0');
+}
+
+function renderIssueGrid(){
+  const grid = document.getElementById('issueGrid');
+  if(!grid) return;
+  grid.innerHTML = Object.keys(ISSUE_LABELS).map(key=>
+    '<button type="button" class="issue-chip" data-issue="'+key+'" onclick="toggleIssue(\''+key+'\')">'+ISSUE_LABELS[key]+'</button>'
+  ).join('');
+}
+function toggleIssue(key){
+  const btn = document.querySelector('.issue-chip[data-issue="'+key+'"]');
+  if(tempSelectedIssues.has(key)){ tempSelectedIssues.delete(key); if(btn) btn.classList.remove('selected'); }
+  else { tempSelectedIssues.add(key); if(btn) btn.classList.add('selected'); }
+}
+function selectMood(mood){
+  tempSelectedMood = mood;
+  document.querySelectorAll('.mood-btn').forEach(b=>b.classList.toggle('selected', b.dataset.mood===mood));
+  const submitBtn = document.getElementById('tempSubmitBtn');
+  if(submitBtn) submitBtn.disabled = false;
+}
+document.addEventListener('click', function(e){
+  const moodBtn = e.target.closest('.mood-btn');
+  if(moodBtn) selectMood(moodBtn.dataset.mood);
+});
+
+function enterTemperatureForm(){
+  if(!tempStartedTracked){ trackEvent('temperature_started', {}); tempStartedTracked = true; }
+  const formCard = document.getElementById('tempFormCard');
+  const resultCard = document.getElementById('tempResultCard');
+  if(formCard) formCard.style.display = '';
+  if(resultCard) resultCard.style.display = 'none';
+}
+
+function renderTemperatureResult(responses){
+  const card = document.getElementById('tempResultCard');
+  if(!card) return;
+  if(responses.length < TEMP_MIN_RESPONSES){
+    card.innerHTML =
+      '<p class="empty-state">아직 충분한 이야기가 모이지 않았어요.<br>오늘의 노동을 남기면 첫 번째 신호가 됩니다.</p>'+
+      '<button class="share-btn" onclick="enterTemperatureForm()">오늘의 노동 남기기</button>';
+    return;
+  }
+  const moodCount = { good:0, neutral:0, hard:0, very_hard:0 };
+  const issueCount = {};
+  responses.forEach(r=>{
+    if(moodCount[r.mood] !== undefined) moodCount[r.mood]++;
+    (r.issues||[]).forEach(i=>{ issueCount[i] = (issueCount[i]||0) + 1; });
+  });
+  const total = responses.length;
+  const moodRows = ['good','neutral','hard','very_hard'].map(key=>{
+    const pct = Math.round((moodCount[key]/total)*100);
+    return '<div class="temp-bar-row"><div class="temp-bar-label"><span>'+MOOD_LABELS[key]+'</span><span>'+pct+'%</span></div>'+
+      '<div class="temp-bar-track"><div class="temp-bar-fill" style="width:'+pct+'%"></div></div></div>';
+  }).join('');
+  const topIssues = Object.entries(issueCount).sort((a,b)=>b[1]-a[1]).slice(0,3);
+  const medals = ['🥇','🥈','🥉'];
+  const issueRows = topIssues.length
+    ? topIssues.map(([key,count],i)=>'<div class="temp-rank-item"><span class="temp-rank-medal">'+medals[i]+'</span><span>'+(ISSUE_LABELS[key]||key)+'</span></div>').join('')
+    : '<p class="empty-state">아직 집계된 이슈가 없어요.</p>';
+
+  card.innerHTML =
+    '<p class="eyebrow" style="margin-bottom:2px;">이번 주 성수 노동온도 · 응답 '+total+'건</p>'+
+    moodRows+
+    '<p class="eyebrow" style="margin:22px 0 2px;">이번 주 가장 많이 나온 문제</p>'+
+    issueRows+
+    '<p class="lede" style="margin:22px 0 4px; font-weight:700; text-align:center;">당신만의 이야기가 아닙니다.</p>'+
+    '<button class="share-btn" onclick="goToLoungeFromTemperature()">💬 비슷한 사람들의 이야기 보기</button>'+
+    '<button class="restart-link" onclick="enterTemperatureForm()">나도 오늘의 노동 남기기</button>';
+}
+
+function goToLoungeFromTemperature(){
+  trackEvent('temperature_to_lounge', {});
+  showSection('lounge');
+}
+
+renderIssueGrid();
 
 /* ---------------- 수첩 (localStorage — 이 기기에만 저장, 서버로 전송 안 됨) ---------------- */
 const NOTES_STORAGE_KEY = 'compass_notes_v1';
@@ -748,7 +911,8 @@ renderNotes();
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
   import {
-    getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp
+    getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp,
+    where, getDocs
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -763,6 +927,8 @@ renderNotes();
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
   const postsCol = collection(db, "lounge_posts");
+  const tempPublicCol = collection(db, "temperature_public");     // mood/issues만 — 공개 읽기
+  const tempCommentsCol = collection(db, "temperature_comments"); // comment만 — 쓰기 전용, 읽기 차단
 
   // onclick="submitLoungePost()"에서 호출하려면 전역(window)에 노출해야 함
   window.submitLoungePost = async function(){
@@ -804,6 +970,57 @@ renderNotes();
     const list = document.getElementById('loungeList');
     if(list) list.innerHTML = '<p class="empty-state">글 목록을 불러오지 못했어요. firebaseConfig 설정을 확인해주세요.</p>';
   });
+
+  /* ---------------- 성수 노동온도: Firestore 읽기/쓰기 ----------------
+     temperature_public: mood/issues만 저장, 공개 읽기 (집계용)
+     temperature_comments: comment만 저장, 쓰기 전용 — 클라이언트에서 절대 읽지 않음(Rules로도 차단됨)
+     두 컬렉션은 서로 참조 ID로 연결하지 않음 — 감정/이슈 선택과 자유서술을 매칭 불가능하게 유지 */
+  window.submitTemperature = async function(){
+    if(!tempSelectedMood) return;
+    const commentEl = document.getElementById('tempComment');
+    const comment = commentEl.value.trim().slice(0, 200);
+    const now = new Date();
+    const dateKey = getDateKey(now);
+    const weekKey = getWeekKey(now);
+    const issues = Array.from(tempSelectedIssues);
+    const btn = document.getElementById('tempSubmitBtn');
+    if(btn){ btn.disabled = true; btn.textContent = '보내는 중...'; }
+    try{
+      await addDoc(tempPublicCol, { mood: tempSelectedMood, issues, dateKey, weekKey, createdAt: serverTimestamp() });
+      if(comment){
+        await addDoc(tempCommentsCol, { comment, dateKey, weekKey, createdAt: serverTimestamp() });
+      }
+      trackEvent('temperature_submitted', { mood: tempSelectedMood, issue_count: issues.length });
+      commentEl.value = '';
+      tempSelectedMood = null;
+      tempSelectedIssues = new Set();
+      document.querySelectorAll('.mood-btn, .issue-chip').forEach(b=>b.classList.remove('selected'));
+      await window.showTemperatureResult();
+    }catch(e){
+      console.error(e);
+      alert('전송에 실패했어요. 잠시 후 다시 시도해주세요.');
+      if(btn){ btn.disabled = false; btn.textContent = '오늘의 노동 남기기'; }
+    }
+  };
+
+  window.showTemperatureResult = async function(){
+    const formCard = document.getElementById('tempFormCard');
+    const resultCard = document.getElementById('tempResultCard');
+    if(formCard) formCard.style.display = 'none';
+    if(resultCard){ resultCard.style.display = ''; resultCard.innerHTML = '<p class="empty-state">이번 주 신호를 모으는 중...</p>'; }
+    const weekKey = getWeekKey(new Date());
+    try{
+      const weekQuery = query(tempPublicCol, where('weekKey', '==', weekKey), limit(500));
+      const snap = await getDocs(weekQuery);
+      const responses = snap.docs.map(d=>d.data());
+      renderTemperatureResult(responses);
+      trackEvent('temperature_result_viewed', { response_count: responses.length });
+    }catch(e){
+      console.error(e);
+      if(resultCard) resultCard.innerHTML = '<p class="empty-state">결과를 불러오지 못했어요. 잠시 후 다시 시도해주세요.</p>';
+    }
+  };
 </script>
 </body>
+
 </html>
