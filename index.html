@@ -294,6 +294,25 @@
     display:inline-block; font-size:0.72rem; background:var(--paper-deep);
     color:var(--ink-soft); padding:2px 8px; border-radius:var(--radius-pill); margin-bottom:8px;
   }
+  .comment-toggle{
+    background:none; border:none; color:var(--brass); font-size:0.78rem;
+    cursor:pointer; padding:0; margin-top:10px; text-decoration:underline;
+  }
+  .comment-box{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
+  .comment-list{ display:flex; flex-direction:column; gap:6px; margin-bottom:8px; }
+  .comment-item{
+    font-size:0.82rem; color:var(--ink-soft); background:var(--paper);
+    border-radius:4px; padding:8px 10px; line-height:1.45;
+  }
+  .comment-compose{ display:flex; gap:6px; }
+  .comment-input{
+    flex:1; padding:8px 10px; border:1px solid var(--line); border-radius:4px;
+    font-size:0.82rem; font-family:inherit; background:var(--card); color:var(--ink);
+  }
+  .comment-submit{
+    flex:none; background:var(--ink); color:var(--paper); border:none;
+    padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:600; cursor:pointer;
+  }
   .compose-note{
     font-size:0.82rem; color:var(--ink-faint); text-align:center; padding:14px;
     border:1px dashed var(--line); border-radius:3px;
@@ -315,6 +334,11 @@
   .empty-state{color:var(--ink-faint); font-size:0.88rem; text-align:center; padding:20px 0;}
   .session-note{font-size:0.76rem; color:var(--ink-faint); margin-top:16px;}
 
+  .share-prompt{
+    max-width:520px; margin:12px auto 0; padding:18px 20px; text-align:center;
+    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-card);
+  }
+  .share-prompt p{ font-size:0.88rem; color:var(--ink-soft); margin:0; }
   .foot-resources{
     max-width:720px; margin:0 auto; padding:16px 18px 40px;
     display:flex; flex-wrap:wrap; gap:6px 14px;
@@ -407,6 +431,12 @@
       <div class="result-label">추정 실제 시급 (야근시간 포함 환산)</div>
       <div class="result-value" id="wageResult">₩0</div>
       <div class="result-compare" id="wageCompare"></div>
+    </div>
+
+    <div class="card" id="salaryCompareCard" style="margin-top:16px;">
+      <div class="field-label" style="font-size:0.86rem; font-weight:600; color:var(--ink-soft); margin-bottom:2px;">내 연봉, 또래·전체 평균과 비교하면?</div>
+      <p style="font-size:0.76rem; color:var(--ink-faint); margin:0 0 14px;">국가데이터처 '2024년 임금근로일자리 소득 결과'(2026.2 발표) 기준</p>
+      <div id="salaryCompare"></div>
     </div>
     <button class="share-btn" onclick="showSection('temperature')">🌡 다른 사람들은 얼마나 일할까?</button>
   </section>
@@ -537,6 +567,11 @@
 
 </main>
 
+<div class="share-prompt">
+  <p>이 도구, 주변에 필요한 사람 있을까요?</p>
+  <button class="share-btn" style="max-width:360px; margin:10px auto 0;" onclick="shareCompass()">🔗 컴파스 공유하기</button>
+</div>
+
 <footer class="foot-resources">
   <span>그 외 상담창구 —</span>
   <a href="tel:1350">고용노동부 1350</a>
@@ -577,22 +612,22 @@ function showSection(id){
 // 최초 진입 시(기본 탭 '시급 계산기') 조회도 한 번 기록
 trackEvent('tab_view', { tab_id: 'wage' });
 
-/* ---------------- 공유(회사 MBTI) ---------------- */
-function shareMbti(typeName, code){
-  const shareUrl = window.location.href.split('#')[0] + '#mbti';
-  const shareText = '우리 회사는 "'+typeName+'"?\n조직문화 이론(경쟁가치모형) 기준으로 나침반에서 우리 회사 유형 확인해보기';
+/* ---------------- 공유(컴파스 전체) ---------------- */
+function shareCompass(){
+  const shareUrl = window.location.href.split('#')[0];
+  const shareText = '성수동에서 일한다면 한 번 열어봐요 — 내 진짜 시급, 못 받은 돈, 우리 회사 유형까지 확인할 수 있어요.';
   if (navigator.share) {
-    navigator.share({ title: '회사 MBTI · 성수동컴파스', text: shareText, url: shareUrl })
-      .then(()=> trackEvent('share_click', { method:'native', code:code }))
+    navigator.share({ title: '성수동컴파스', text: shareText, url: shareUrl })
+      .then(()=> trackEvent('share_click', { method:'native', source:'compass' }))
       .catch(()=>{ /* 사용자가 공유를 취소한 경우 등은 조용히 무시 */ });
   } else if (navigator.clipboard) {
     navigator.clipboard.writeText(shareText + '\n' + shareUrl).then(()=>{
-      alert('결과가 복사됐어요. 원하는 곳에 붙여넣기 해주세요!');
-      trackEvent('share_click', { method:'clipboard', code:code });
+      alert('링크가 복사됐어요. 원하는 곳에 붙여넣기 해주세요!');
+      trackEvent('share_click', { method:'clipboard', source:'compass' });
     });
   } else {
-    alert('이 결과를 캡처해서 공유해보세요!');
-    trackEvent('share_click', { method:'manual', code:code });
+    alert('이 주소를 복사해서 공유해보세요: ' + shareUrl);
+    trackEvent('share_click', { method:'manual', source:'compass' });
   }
 }
 
@@ -624,6 +659,26 @@ function calcWage(){
   } else {
     wageCompare.innerHTML = '2026년 최저시급 10,320원보다 <span class="compare-ok">'+pct+'% 높아요.</span> 다만 야근 '+Math.round(otMonthlyHours)+'시간이 포함된 계산이라는 점을 기억해주세요.';
   }
+  renderSalaryCompare(salary);
+}
+/* 국가데이터처 '2024년 임금근로일자리 소득(보수) 결과'(2026.2.23 발표) 기준, 월소득×12로 연 환산 */
+const SALARY_BENCHMARKS = [
+  { label:'20대 평균', value: 2710000 * 12 },
+  { label:'중위소득', value: 2880000 * 12 },
+  { label:'전체 평균', value: 3750000 * 12 },
+];
+function renderSalaryCompare(mySalary){
+  const el = document.getElementById('salaryCompare');
+  if(!el) return;
+  if(mySalary <= 0){ el.innerHTML = ''; return; }
+  const rows = [{ label:'내 연봉', value:mySalary, mine:true }, ...SALARY_BENCHMARKS];
+  const maxVal = Math.max(...rows.map(r=>r.value));
+  el.innerHTML = rows.map(r=>{
+    const barPct = maxVal>0 ? Math.round((r.value/maxVal)*100) : 0;
+    const amountText = '₩'+Math.round(r.value/10000).toLocaleString('ko-KR')+'만원';
+    return '<div class="temp-bar-row"><div class="temp-bar-label"><span>'+r.label+'</span><span>'+amountText+'</span></div>'+
+      '<div class="temp-bar-track"><div class="temp-bar-fill" style="width:'+barPct+'%; background:'+(r.mine?'var(--coral)':'var(--brass)')+';"></div></div></div>';
+  }).join('');
 }
 [salaryEl, otCountEl, otHoursEl].forEach(el=>el.addEventListener('input', calcWage));
 calcWage();
@@ -793,7 +848,6 @@ function renderMbti(){
       barsHtml+
       '<p class="lede" style="margin:16px 0 6px;">'+type.desc+'</p>'+
       '<button class="share-btn" onclick="showSection(\'wage\')">💰 내 진짜 시급 계산하기</button>'+
-      '<button class="restart-link" onclick="shareMbti(\''+type.name+'\',\''+dominant+'\')">결과 공유하기</button>'+
       '<button class="restart-link" onclick="mbtiIdx=0;mbtiTypeCount={Clan:0,Adhocracy:0,Market:0,Hierarchy:0};renderMbti();">다시 진단하기</button></div>';
     trackEvent('mbti_complete', { code: dominant, type: type.name });
     return;
@@ -1027,17 +1081,79 @@ renderNotes();
     }
     list.innerHTML = snapshot.docs.map(doc=>{
       const d = doc.data();
+      const id = doc.id;
       const when = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : new Date();
       const dateStr = when.getFullYear()+'.'+String(when.getMonth()+1).padStart(2,'0')+'.'+String(when.getDate()).padStart(2,'0');
       const safeTag = (d.tag || '익명').replace(/</g,'&lt;');
       const safeText = (d.text || '').replace(/</g,'&lt;');
-      return '<div class="post"><span class="post-tag">'+safeTag+'</span><div class="post-meta">'+dateStr+'</div><p class="post-body">'+safeText+'</p></div>';
+      return '<div class="post">'+
+        '<span class="post-tag">'+safeTag+'</span><div class="post-meta">'+dateStr+'</div><p class="post-body">'+safeText+'</p>'+
+        '<button class="comment-toggle" onclick="toggleComments(\''+id+'\')">💬 댓글</button>'+
+        '<div class="comment-box" id="commentBox_'+id+'" style="display:none;">'+
+          '<div class="comment-list" id="commentList_'+id+'"></div>'+
+          '<div class="comment-compose">'+
+            '<input type="text" class="comment-input" id="commentInput_'+id+'" maxlength="200" placeholder="댓글을 남겨보세요">'+
+            '<button class="comment-submit" onclick="submitComment(\''+id+'\')">등록</button>'+
+          '</div>'+
+        '</div>'+
+      '</div>';
     }).join('');
   }, (err)=>{
     console.error(err);
     const list = document.getElementById('loungeList');
     if(list) list.innerHTML = '<p class="empty-state">글 목록을 불러오지 못했어요. firebaseConfig 설정을 확인해주세요.</p>';
   });
+
+  /* ---------------- 라운지 댓글: lounge_posts/{postId}/comments 서브컬렉션 ----------------
+     펼칠 때만 불러오는 방식(1회성 조회)으로, 모든 게시물의 댓글을 항상 구독하지 않아 읽기 비용을 아낌 */
+  async function loadComments(postId){
+    const listEl = document.getElementById('commentList_'+postId);
+    if(!listEl) return;
+    listEl.innerHTML = '<p class="empty-state" style="font-size:0.78rem; padding:6px 0;">불러오는 중...</p>';
+    try{
+      const commentsCol = collection(db, 'lounge_posts', postId, 'comments');
+      const commentsQuery = query(commentsCol, orderBy('createdAt', 'asc'), limit(100));
+      const snap = await getDocs(commentsQuery);
+      if(snap.empty){
+        listEl.innerHTML = '<p class="empty-state" style="font-size:0.78rem; padding:6px 0;">아직 댓글이 없어요. 첫 댓글을 남겨보세요.</p>';
+        return;
+      }
+      listEl.innerHTML = snap.docs.map(d=>{
+        const safeText = (d.data().text || '').replace(/</g,'&lt;');
+        return '<div class="comment-item">'+safeText+'</div>';
+      }).join('');
+    }catch(e){
+      console.error(e);
+      listEl.innerHTML = '<p class="empty-state" style="font-size:0.78rem; padding:6px 0;">댓글을 불러오지 못했어요.</p>';
+    }
+  }
+  window.toggleComments = function(postId){
+    const box = document.getElementById('commentBox_'+postId);
+    if(!box) return;
+    const wasHidden = box.style.display === 'none' || !box.style.display;
+    box.style.display = wasHidden ? '' : 'none';
+    if(wasHidden && !box.dataset.loaded){
+      box.dataset.loaded = '1';
+      loadComments(postId);
+    }
+  };
+  window.submitComment = async function(postId){
+    const inputEl = document.getElementById('commentInput_'+postId);
+    if(!inputEl) return;
+    const text = inputEl.value.trim();
+    if(!text) return;
+    if(text.length > 200){ alert('200자 이내로 적어주세요.'); return; }
+    try{
+      const commentsCol = collection(db, 'lounge_posts', postId, 'comments');
+      await addDoc(commentsCol, { text, createdAt: serverTimestamp() });
+      inputEl.value = '';
+      if (typeof trackEvent === 'function') trackEvent('lounge_comment_added', {});
+      await loadComments(postId);
+    }catch(e){
+      console.error(e);
+      alert('댓글 등록에 실패했어요. 잠시 후 다시 시도해주세요.');
+    }
+  };
 
   /* ---------------- 성수 노동온도: Firestore 읽기/쓰기 ----------------
      temperature_public: mood/issues만 저장, 공개 읽기 (집계용)
