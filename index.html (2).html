@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>성수동컴파스 — 노동 권익 나침반</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+
+<!-- ===== 방문/전환 추적 (GA4) =====
+  아래 G-XXXXXXXXXX 두 곳을 analytics.google.com 에서 무료로 발급받은
+  본인의 GA4 측정 ID로 바꿔주세요. 개인 식별 정보는 수집하지 않고,
+  탭 조회수·퀴즈 완료·공유 클릭 같은 "익명 집계" 이벤트만 남습니다.
+-->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX', { anonymize_ip: true, allow_google_signals: false });
+  // 개인정보를 담지 않는 간단한 이벤트 로깅 헬퍼. GA4 스크립트가 아직 로드되기 전이거나
+  // 광고 차단기 때문에 gtag가 없을 때도 페이지가 죽지 않도록 try/catch로 감쌉니다.
+  function trackEvent(name, params){
+    try { gtag('event', name, params || {}); } catch(e) { /* GA 로드 실패 시 무시 */ }
+  }
+</script>
+<style>
+  :root{
+    --ink:#182732;
+    --ink-soft:#3A4C58;
+    --ink-faint:#7C8A93;
+    --paper:#EFEAE0;
+    --paper-deep:#E3DCC9;
+    --card:#FBF9F4;
+    --brass:#AD7C2E;
+    --brass-soft:#D8B876;
+    --coral:#C6522E;
+    --coral-soft:#F1D9CE;
+    --moss:#43604F;
+    --moss-soft:#D9E3D6;
+    --line:#CFC6AF;
+    --radius-card: 4px;
+    --radius-pill: 999px;
+    --shadow: 0 1px 0 rgba(24,39,50,0.06);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Pretendard', -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  h1,h2,h3,.serif{font-family:'Fraunces', serif;}
+  a{color:inherit;}
+  button{font-family:inherit;}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:var(--ink);
+    color:var(--paper);
+    padding:12px 18px;
+  }
+  .topbar-inner{
+    max-width:720px; margin:0 auto;
+    display:flex; align-items:center; gap:12px;
+  }
+  .needle-wrap{width:30px;height:30px;flex:none;}
+  .brand{
+    font-family:'Fraunces', serif;
+    font-size:1.05rem;
+    font-weight:600;
+    letter-spacing:0.01em;
+  }
+  .brand small{
+    display:block;
+    font-family:'Pretendard',sans-serif;
+    font-size:0.66rem;
+    font-weight:400;
+    color:#B9C3C9;
+    letter-spacing:0.02em;
+    margin-top:1px;
+  }
+  .sos-btn{
+    margin-left:auto;
+    background:var(--coral);
+    color:#fff;
+    border:none;
+    border-radius:var(--radius-pill);
+    padding:7px 14px;
+    font-size:0.82rem;
+    font-weight:600;
+    cursor:pointer;
+    flex:none;
+    text-decoration:none;
+    display:inline-block;
+  }
+  .sos-btn:active{transform:translateY(1px);}
+
+  .tabs{
+    max-width:720px; margin:0 auto;
+    display:flex; gap:4px;
+    overflow-x:auto;
+    padding-top:10px;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tab{
+    flex:none;
+    background:transparent;
+    border:none;
+    color:#9FACB3;
+    padding:8px 10px 10px;
+    font-size:0.82rem;
+    cursor:pointer;
+    border-bottom:2px solid transparent;
+    display:flex; flex-direction:column; align-items:flex-start;
+    white-space:nowrap;
+  }
+  .tab .deg{
+    font-variant-numeric: tabular-nums;
+    font-size:0.66rem;
+    color:#6E7C84;
+    margin-bottom:2px;
+  }
+  .tab.active{color:#fff; border-bottom-color:var(--brass-soft);}
+  .tab.active .deg{color:var(--brass-soft);}
+
+  /* ---------- layout ---------- */
+  main{max-width:720px; margin:0 auto; padding:26px 18px 90px;}
+  section{display:none;}
+  section.active{display:block; animation:rise 0.35s ease both;}
+  @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+
+  .eyebrow{
+    font-size:0.78rem;
+    color:var(--brass);
+    font-weight:600;
+    margin:0 0 6px;
+  }
+  h1.page-title{
+    font-size:clamp(1.5rem, 5vw, 2.05rem);
+    font-weight:600;
+    margin:0 0 10px;
+    line-height:1.25;
+  }
+  .lede{
+    color:var(--ink-soft);
+    font-size:0.96rem;
+    line-height:1.6;
+    max-width:46ch;
+    margin:0 0 26px;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius-card);
+    padding:22px;
+    margin-bottom:16px;
+  }
+
+  /* ---------- calculator ---------- */
+  .field{margin-bottom:20px;}
+  .field label{
+    display:block;
+    font-size:0.84rem;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+    font-weight:500;
+  }
+  .field input[type=number], .field select{
+    width:100%;
+    padding:12px 14px;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:3px;
+    font-size:1rem;
+    font-family:inherit;
+    color:var(--ink);
+  }
+  .field input[type=range]{
+    width:100%; accent-color:var(--brass);
+  }
+  .range-row{display:flex; justify-content:space-between; font-size:0.78rem; color:var(--ink-faint); margin-top:4px;}
+  .suffix-row{display:flex; align-items:center; gap:8px;}
+  .suffix-row input{flex:1;}
+  .suffix{color:var(--ink-faint); font-size:0.85rem;}
+
+  .result-block{
+    background:var(--ink);
+    color:var(--paper);
+    border-radius:var(--radius-card);
+    padding:26px 22px;
+    text-align:left;
+  }
+  .result-label{font-size:0.8rem; color:#B9C3C9; margin-bottom:6px;}
+  .result-value{
+    font-family:'Fraunces', serif;
+    font-size:clamp(2.1rem, 9vw, 2.8rem);
+    font-weight:600;
+    line-height:1;
+    font-variant-numeric: tabular-nums;
+  }
+  .result-value span{font-size:0.5em; color:#B9C3C9; font-weight:400;}
+  .result-compare{
+    margin-top:14px;
+    padding-top:14px;
+    border-top:1px solid rgba(255,255,255,0.15);
+    font-size:0.85rem;
+    color:#D8DEE1;
+    line-height:1.6;
+  }
+  .compare-bad{color:#E39B84;}
+  .compare-ok{color:#9FCB9F;}
+
+  /* ---------- quiz ---------- */
+  .q-progress{
+    display:flex; gap:4px; margin-bottom:22px;
+  }
+  .q-progress i{
+    flex:1; height:3px; background:var(--line); border-radius:2px; display:block;
+  }
+  .q-progress i.done{background:var(--brass);}
+  .q-num{font-size:0.78rem; color:var(--brass); font-weight:600; margin-bottom:8px;}
+  .q-text{font-size:1.1rem; font-weight:500; margin:0 0 18px; line-height:1.5;}
+  .q-options{display:flex; flex-direction:column; gap:10px;}
+  .q-opt{
+    text-align:left;
+    padding:14px 16px;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:3px;
+    font-size:0.94rem;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .q-opt:active{background:var(--paper-deep);}
+  .quiz-result h3{font-size:1.3rem; margin:0 0 8px;}
+  .risk-badge{
+    display:inline-block; padding:4px 12px; border-radius:var(--radius-pill);
+    font-size:0.8rem; font-weight:600; margin-bottom:14px;
+  }
+  .risk-low{background:var(--moss-soft); color:var(--moss);}
+  .risk-mid{background:#F1E4C2; color:#8A6412;}
+  .risk-high{background:var(--coral-soft); color:var(--coral);}
+  .restart-link{
+    background:none; border:none; color:var(--brass); font-size:0.85rem;
+    text-decoration:underline; cursor:pointer; padding:0; margin-top:14px;
+  }
+  .share-btn{
+    display:block; width:100%; margin-top:16px;
+    background:var(--ink); color:var(--paper); border:none;
+    padding:13px 16px; border-radius:3px; font-size:0.92rem; font-weight:600; cursor:pointer;
+  }
+  .share-btn:active{transform:translateY(1px);}
+  .mbti-code{
+    font-family:'Fraunces', serif; font-size:2.4rem; font-weight:600; letter-spacing:0.04em;
+    margin:4px 0 4px;
+  }
+
+  /* ---------- lounge ---------- */
+  .post{border-bottom:1px solid var(--line); padding:16px 0;}
+  .post:last-child{border-bottom:none;}
+  .post-meta{font-size:0.76rem; color:var(--ink-faint); margin-bottom:6px;}
+  .post-body{font-size:0.92rem; line-height:1.6; margin:0;}
+  .post-tag{
+    display:inline-block; font-size:0.72rem; background:var(--paper-deep);
+    color:var(--ink-soft); padding:2px 8px; border-radius:var(--radius-pill); margin-bottom:8px;
+  }
+  .compose-note{
+    font-size:0.82rem; color:var(--ink-faint); text-align:center; padding:14px;
+    border:1px dashed var(--line); border-radius:3px;
+  }
+
+  /* ---------- notebook ---------- */
+  textarea{
+    width:100%; min-height:90px; padding:12px 14px; border:1px solid var(--line);
+    border-radius:3px; font-family:inherit; font-size:0.94rem; resize:vertical;
+  }
+  .note-add{
+    margin-top:10px; background:var(--ink); color:var(--paper); border:none;
+    padding:11px 18px; border-radius:3px; font-size:0.88rem; font-weight:600; cursor:pointer;
+  }
+  .note-item{
+    border-left:2px solid var(--brass); padding:4px 0 4px 14px; margin-bottom:14px;
+  }
+  .note-date{font-size:0.74rem; color:var(--ink-faint); margin-bottom:3px;}
+  .empty-state{color:var(--ink-faint); font-size:0.88rem; text-align:center; padding:20px 0;}
+  .session-note{font-size:0.76rem; color:var(--ink-faint); margin-top:16px;}
+
+  .foot-resources{
+    max-width:720px; margin:0 auto; padding:16px 18px 40px;
+    display:flex; flex-wrap:wrap; gap:6px 14px;
+    font-size:0.76rem; color:var(--ink-faint);
+  }
+  .foot-resources a{ color:var(--ink-soft); text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="needle-wrap">
+      <svg id="needle" viewBox="0 0 40 40" style="transition:transform 0.5s cubic-bezier(.2,.8,.2,1);">
+        <circle cx="20" cy="20" r="18" fill="none" stroke="#4A5A64" stroke-width="1.5"/>
+        <polygon points="20,6 24,20 20,34 16,20" fill="#D8B876"/>
+        <polygon points="20,6 24,20 20,20" fill="#F1D9CE"/>
+        <circle cx="20" cy="20" r="2" fill="#EFEAE0"/>
+      </svg>
+    </div>
+    <div class="brand">성수동컴파스<small>노동 권익 나침반</small></div>
+    <!-- 지금은 실제 1:1 상담창구가 없어 nodong.kr로 바로 연결합니다. 나중에 온라인/오프라인
+         1:1 상담창구가 생기면 이 한 줄의 href만 바꾸면 됩니다. -->
+    <a class="sos-btn" href="https://www.nodong.kr/index.php" target="_blank" rel="noopener">SOS</a>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</div>
+
+<main>
+
+  <!-- ===== 시급 계산기 ===== -->
+  <section id="wage" class="active">
+    <p class="eyebrow">000° 정북 — 지금 내 위치</p>
+    <h1 class="page-title">내 진짜 시급 계산기</h1>
+    <p class="lede">포괄임금제 아래, 야근을 포함해 실제로 받고 있는 시급을 계산해요. 계약서 숫자와 통장에 찍히는 숫자는 다를 수 있어요.</p>
+
+    <div class="card">
+      <div class="field">
+        <label for="salary">계약서상 올해 연봉 (만원)</label>
+        <input type="number" id="salary" placeholder="예: 2800" inputmode="numeric" value="2800">
+      </div>
+
+      <div class="field">
+        <label for="otCount">일주일 평균 야근 횟수</label>
+        <select id="otCount">
+          <option value="0">야근 없음</option>
+          <option value="1">주 1회</option>
+          <option value="2" selected>주 2회</option>
+          <option value="3">주 3회</option>
+          <option value="4">주 4회</option>
+          <option value="5">주 5회</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="otHours">평균 야근 근무시간 (회당, 시간)</label>
+        <div class="suffix-row">
+          <input type="range" id="otHours" min="0" max="5" step="0.5" value="1.5">
+          <span class="suffix" id="otHoursLabel">1.5h</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-label">추정 실제 시급 (야근시간 포함 환산)</div>
+      <div class="result-value" id="wageResult">₩0</div>
+      <div class="result-compare" id="wageCompare"></div>
+    </div>
+  </section>
+
+  <!-- ===== 못받은 돈 계산기 ===== -->
+  <section id="unpaid">
+    <p class="eyebrow">045° 북동 — 3년치 청구 가능액</p>
+    <h1 class="page-title">내가 못 받은 돈 계산기</h1>
+    <p class="lede">젠틀몬스터 사례처럼, 연장근로수당이 제대로 계산·지급되지 않는 경우가 많아요. 대략 얼마를 못 받았을 수 있는지 가늠해봐요.</p>
+
+    <div class="card">
+      <div class="field">
+        <label for="upSalary">계약서상 올해 연봉 (만원)</label>
+        <input type="number" id="upSalary" placeholder="예: 3500" inputmode="numeric" value="3500">
+      </div>
+      <div class="field">
+        <label for="upOtHours">일주일 평균 연장근로시간 (기본 40시간 초과분, 시간)</label>
+        <div class="suffix-row">
+          <input type="range" id="upOtHours" min="0" max="30" step="1" value="10">
+          <span class="suffix" id="upOtHoursLabel">10h</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="upMonths">이런 근무가 계속된 기간 (개월, 최대 36개월=3년)</label>
+        <div class="suffix-row">
+          <input type="range" id="upMonths" min="1" max="36" step="1" value="36">
+          <span class="suffix" id="upMonthsLabel">36개월</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="result-block">
+      <div class="result-label">3년(소멸시효) 내 청구 가능 추정액</div>
+      <div class="result-value" id="upResult">₩0</div>
+      <div class="result-compare" id="upCompare"></div>
+    </div>
+
+    <p class="compose-note" style="margin-top:16px; text-align:left;">
+      ⚠️ 법률 자문이 아닌 <b>참고용 추정치</b>예요. 통상시급 × 1.5배(근로기준법 제56조) 기준으로만 계산했고, 야간·휴일수당·지연이자는 포함하지 않았어요.
+      실제 청구에는 근로계약서·급여명세서·근태기록(메신저 접속기록, 법인카드 사용내역 등도 증빙이 될 수 있어요)이 필요하고, 임금채권은
+      <b>퇴직 후에도 3년 이내</b>면 청구할 수 있어요. 정확한 금액 확인은 SOS 버튼의 상담 창구를 이용해보세요.
+    </p>
+  </section>
+
+  <!-- ===== 위험도 진단 ===== -->
+  <section id="risk">
+    <p class="eyebrow">090° 정동 — 지금 신호 읽기</p>
+    <h1 class="page-title">일터 위험도 진단</h1>
+    <p class="lede">다섯 가지 질문으로 지금 일하는 곳의 상태를 점검해요. 정답은 없어요, 지금 상황을 그대로 골라주세요.</p>
+    <div class="card" id="riskCard"></div>
+  </section>
+
+  <!-- ===== 회사 MBTI ===== -->
+  <section id="mbti">
+    <p class="eyebrow">180° 정남 — 우리 회사의 기질</p>
+    <h1 class="page-title">회사 MBTI</h1>
+    <p class="lede">네 가지 질문으로 지금 회사의 유형을 가볍게 진단해요. 결과는 재미로, 체크리스트는 참고로 써주세요.</p>
+    <div class="card" id="mbtiCard"></div>
+  </section>
+
+  <!-- ===== 라운지 ===== -->
+  <section id="lounge">
+    <p class="eyebrow">270° 정서 — 조용히 나누는 곳</p>
+    <h1 class="page-title">라운지</h1>
+    <p class="lede">이름도 회사명도 남기지 않아요. 성수동에서 일하는 사람들이 조용히 나눈 이야기예요.</p>
+
+    <div class="card">
+      <div class="field">
+        <label for="loungeTag">직군·업종 (선택)</label>
+        <input type="text" id="loungeTag" placeholder="예: 카페·오픈조, 편집숍·계약직" maxlength="20">
+      </div>
+      <textarea id="loungeInput" placeholder="오늘 있었던 일, 궁금한 것을 익명으로 남겨보세요." maxlength="500"></textarea>
+      <button class="note-add" onclick="submitLoungePost()">올리기</button>
+    </div>
+
+    <div id="loungeList" class="card">
+      <p class="empty-state">불러오는 중...</p>
+    </div>
+  </section>
+
+
+  <!-- ===== 수첩 ===== -->
+  <section id="notebook">
+    <p class="eyebrow">근무 기록 수첩</p>
+    <h1 class="page-title">수첩</h1>
+    <p class="lede">그날그날 있었던 일을 짧게 적어두면, 나중에 큰 힘이 돼요. 날짜는 자동으로 붙어요.</p>
+    <div class="card">
+      <textarea id="noteInput" placeholder="오늘 있었던 일을 적어보세요. 예: 저녁 8시 넘어서까지 일했는데 야근수당 얘기가 없었음."></textarea>
+      <button class="note-add" onclick="addNote()">기록 추가</button>
+    </div>
+    <div id="noteList"></div>
+    <p class="session-note">이 수첩은 지금 브라우저 세션에만 저장돼요. 중요한 기록은 따로 캡처해두는 걸 추천해요.</p>
+  </section>
+
+</main>
+
+<footer class="foot-resources">
+  <span>그 외 상담창구 —</span>
+  <a href="tel:1350">고용노동부 1350</a>
+  <a href="tel:1644-3119">청소년근로권익센터 1644-3119</a>
+  <a href="tel:110">직장내괴롭힘 110</a>
+</footer>
+
+<script>
+/* ---------------- nav ---------------- */
+const sections = [
+  {id:'wage', deg:'000°', label:'시급 계산기'},
+  {id:'unpaid', deg:'045°', label:'못받은 돈 계산기'},
+  {id:'risk', deg:'090°', label:'위험도 진단'},
+  {id:'mbti', deg:'180°', label:'회사 MBTI'},
+  {id:'lounge', deg:'270°', label:'라운지'},
+  {id:'notebook', deg:'—', label:'수첩'},
+];
+const tabsEl = document.getElementById('tabs');
+sections.forEach(s=>{
+  const b = document.createElement('button');
+  b.className = 'tab' + (s.id==='wage' ? ' active':'');
+  b.dataset.id = s.id;
+  b.innerHTML = '<span class="deg">'+s.deg+'</span>'+s.label;
+  b.onclick = ()=>showSection(s.id);
+  tabsEl.appendChild(b);
+});
+function showSection(id){
+  document.querySelectorAll('section').forEach(s=>s.classList.toggle('active', s.id===id));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.id===id));
+  const idx = sections.findIndex(s=>s.id===id);
+  const deg = idx>=0 && sections[idx].deg!=='—' ? parseInt(sections[idx].deg) : (idx*72);
+  document.getElementById('needle').style.transform = 'rotate('+deg+'deg)';
+  window.scrollTo({top:0, behavior:'smooth'});
+  trackEvent('tab_view', { tab_id: id });
+}
+// 최초 진입 시(기본 탭 '시급 계산기') 조회도 한 번 기록
+trackEvent('tab_view', { tab_id: 'wage' });
+
+/* ---------------- 공유(회사 MBTI) ---------------- */
+function shareMbti(typeName, code){
+  const shareUrl = window.location.href.split('#')[0] + '#mbti';
+  const shareText = '우리 회사는 '+code+' — "'+typeName+'"?\n나침반에서 우리 회사 MBTI 확인해보기';
+  if (navigator.share) {
+    navigator.share({ title: '회사 MBTI · 성수동컴파스', text: shareText, url: shareUrl })
+      .then(()=> trackEvent('share_click', { method:'native', code:code }))
+      .catch(()=>{ /* 사용자가 공유를 취소한 경우 등은 조용히 무시 */ });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(shareText + '\n' + shareUrl).then(()=>{
+      alert('결과가 복사됐어요. 원하는 곳에 붙여넣기 해주세요!');
+      trackEvent('share_click', { method:'clipboard', code:code });
+    });
+  } else {
+    alert('이 결과를 캡처해서 공유해보세요!');
+    trackEvent('share_click', { method:'manual', code:code });
+  }
+}
+
+/* ---------------- 시급 계산기 ---------------- */
+const salaryEl = document.getElementById('salary');
+const otCountEl = document.getElementById('otCount');
+const otHoursEl = document.getElementById('otHours');
+const otHoursLabel = document.getElementById('otHoursLabel');
+const wageResult = document.getElementById('wageResult');
+const wageCompare = document.getElementById('wageCompare');
+const MIN_WAGE_2026 = 10320;
+
+function calcWage(){
+  otHoursLabel.textContent = parseFloat(otHoursEl.value).toFixed(1)+'h';
+  const salary = (parseFloat(salaryEl.value)||0) * 10000;
+  const monthlyBase = salary / 12;
+  const weeksPerMonth = 4.345;
+  const otMonthlyHours = (parseFloat(otCountEl.value)||0) * weeksPerMonth * (parseFloat(otHoursEl.value)||0);
+  const standardMonthlyHours = 209;
+  const totalHours = standardMonthlyHours + otMonthlyHours;
+  const realWage = totalHours>0 ? monthlyBase/totalHours : 0;
+  wageResult.innerHTML = '₩' + Math.round(realWage).toLocaleString('ko-KR') + '<span> / 시간</span>';
+
+  if(realWage <= 0){ wageCompare.textContent=''; return; }
+  const diff = realWage - MIN_WAGE_2026;
+  const pct = Math.abs(Math.round((diff/MIN_WAGE_2026)*100));
+  if(diff < -1){
+    wageCompare.innerHTML = '2026년 최저시급 10,320원보다 <span class="compare-bad">'+pct+'% 낮아요.</span> 월 '+Math.round(otMonthlyHours)+'시간의 야근이 시급을 이만큼 끌어내리고 있어요.';
+  } else {
+    wageCompare.innerHTML = '2026년 최저시급 10,320원보다 <span class="compare-ok">'+pct+'% 높아요.</span> 다만 야근 '+Math.round(otMonthlyHours)+'시간이 포함된 계산이라는 점을 기억해주세요.';
+  }
+}
+[salaryEl, otCountEl, otHoursEl].forEach(el=>el.addEventListener('input', calcWage));
+calcWage();
+// 'change'는 입력을 다 마쳤을 때만 한 번씩 발생하므로, 매 키입력마다 이벤트를 쏘지 않음
+[salaryEl, otCountEl, otHoursEl].forEach(el=>el.addEventListener('change', ()=>{
+  trackEvent('wage_calculated', {});
+}));
+
+/* ---------------- 못받은 돈 계산기 ---------------- */
+const upSalaryEl = document.getElementById('upSalary');
+const upOtHoursEl = document.getElementById('upOtHours');
+const upOtHoursLabel = document.getElementById('upOtHoursLabel');
+const upMonthsEl = document.getElementById('upMonths');
+const upMonthsLabel = document.getElementById('upMonthsLabel');
+const upResult = document.getElementById('upResult');
+const upCompare = document.getElementById('upCompare');
+const STANDARD_MONTHLY_HOURS = 209; // 근로기준법상 월 소정근로시간(주 40시간 기준)
+const OT_PREMIUM = 1.5; // 연장근로 가산율, 근로기준법 제56조
+const WEEKS_PER_MONTH = 4.345;
+const STATUTE_OF_LIMITATIONS_MONTHS = 36; // 임금채권 소멸시효 3년
+
+function calcUnpaid(){
+  upOtHoursLabel.textContent = upOtHoursEl.value + 'h';
+  upMonthsLabel.textContent = upMonthsEl.value + '개월';
+
+  const salary = (parseFloat(upSalaryEl.value)||0) * 10000;
+  const ordinaryHourlyWage = salary / 12 / STANDARD_MONTHLY_HOURS;
+  const weeklyOtHours = parseFloat(upOtHoursEl.value) || 0;
+  const monthlyOtHours = weeklyOtHours * WEEKS_PER_MONTH;
+  const monthlyUnpaid = ordinaryHourlyWage * OT_PREMIUM * monthlyOtHours;
+  const months = Math.min(parseFloat(upMonthsEl.value) || 0, STATUTE_OF_LIMITATIONS_MONTHS);
+  const totalClaim = monthlyUnpaid * months;
+
+  upResult.innerHTML = '₩' + Math.round(totalClaim).toLocaleString('ko-KR');
+
+  if(totalClaim <= 0){ upCompare.textContent=''; return; }
+  let tier;
+  if(totalClaim < 3000000){
+    tier = '이 정도 금액도 고용노동부 진정은 무료로, 변호사 없이도 접수할 수 있어요.';
+  } else if(totalClaim < 10000000){
+    tier = '동료들과 같이 계산해서 공동으로 진정을 넣으면 훨씬 힘이 실려요.';
+  } else {
+    tier = '이 정도면 노무사·변호사 상담을 통해 실제 청구를 검토해볼 만한 금액이에요.';
+  }
+  upCompare.innerHTML = '통상시급 ₩'+Math.round(ordinaryHourlyWage).toLocaleString('ko-KR')+' 기준, 월 약 ₩'+Math.round(monthlyUnpaid).toLocaleString('ko-KR')+'씩 '+months+'개월치예요. '+tier;
+}
+[upSalaryEl, upOtHoursEl, upMonthsEl].forEach(el=>el.addEventListener('input', calcUnpaid));
+calcUnpaid();
+// 계산했다는 사실만 집계하고, 금액이나 입력값은 전송하지 않음(민감한 개인 재정 정보 보호)
+[upSalaryEl, upOtHoursEl, upMonthsEl].forEach(el=>el.addEventListener('change', ()=>{
+  trackEvent('unpaid_calculated', {});
+}));
+
+/* ---------------- 위험도 진단 ---------------- */
+const riskQuestions = [
+  {q:'근로계약서를 직접 받아서 가지고 있나요?', opts:[{t:'네, 사본을 갖고 있어요', v:0},{t:'회사에만 있고 저는 못 받았어요', v:2}]},
+  {q:'야근이나 초과근무를 하면 수당이나 대체휴무로 보상받나요?', opts:[{t:'네, 보상받고 있어요', v:0},{t:'가끔 흐지부지돼요', v:1},{t:'전혀 보상받지 못해요', v:2}]},
+  {q:'급여가 정해진 날짜에 정확히 들어오나요?', opts:[{t:'항상 제때 들어와요', v:0},{t:'가끔 며칠 늦어요', v:1},{t:'자주 밀리거나 부족해요', v:2}]},
+  {q:'휴게시간(점심 등)을 방해받지 않고 쓸 수 있나요?', opts:[{t:'네, 온전히 쓸 수 있어요', v:0},{t:'거의 못 쓰거나 근무로 이어져요', v:2}]},
+  {q:'상사나 사장님에게 부당한 말이나 지시를 들은 적 있나요?', opts:[{t:'없어요', v:0},{t:'가끔 있어요', v:1},{t:'자주 있어요', v:2}]},
+];
+let riskIdx = 0, riskScore = 0;
+function renderRisk(){
+  const el = document.getElementById('riskCard');
+  if(riskIdx >= riskQuestions.length){
+    let level, cls, msg;
+    if(riskScore <= 2){level='낮음'; cls='risk-low'; msg='지금은 비교적 안전한 신호예요. 다만 상황은 계속 바뀔 수 있으니 가끔 다시 체크해보세요.';}
+    else if(riskScore <= 6){level='보통'; cls='risk-mid'; msg='몇 가지 신호가 걸려요. 수첩에 상황을 기록해두고, 반복되면 상담을 받아보는 걸 권해요.';}
+    else {level='높음'; cls='risk-high'; msg='여러 위험 신호가 겹쳐 있어요. 혼자 해결하려 하지 말고 SOS 버튼으로 상담을 받아보세요.';}
+    el.innerHTML = '<div class="quiz-result"><span class="risk-badge '+cls+'">위험도 '+level+'</span>'+
+      '<h3>진단 점수 '+riskScore+' / 10</h3>'+
+      '<p class="lede" style="margin-bottom:6px;">'+msg+'</p>'+
+      '<button class="restart-link" onclick="riskIdx=0;riskScore=0;renderRisk();">다시 진단하기</button></div>';
+    trackEvent('risk_complete', { level: level });
+    return;
+  }
+  const q = riskQuestions[riskIdx];
+  let bars = '';
+  for(let i=0;i<riskQuestions.length;i++) bars += '<i class="'+(i<riskIdx?'done':'')+'"></i>';
+  let opts = q.opts.map(o=>'<button class="q-opt" onclick="answerRisk('+o.v+')">'+o.t+'</button>').join('');
+  el.innerHTML = '<div class="q-progress">'+bars+'</div>'+
+    '<div class="q-num">질문 '+(riskIdx+1)+' / '+riskQuestions.length+'</div>'+
+    '<p class="q-text">'+q.q+'</p>'+
+    '<div class="q-options">'+opts+'</div>';
+}
+function answerRisk(v){ riskScore += v; riskIdx++; renderRisk(); }
+renderRisk();
+
+/* ---------------- 회사 MBTI ---------------- */
+const mbtiQuestions = [
+  {q:'야근, 얼마나 잦은 편인가요?', opts:[{t:'거의 없고 칼퇴가 기본이에요', letter:'F', flag:0},{t:'예고 없이 자주 붙잡혀요', letter:'O', flag:1}]},
+  {q:'회사 안에서 의견을 내면 어떤가요?', opts:[{t:'직급 상관없이 편하게 얘기해요', letter:'E', flag:0},{t:'윗사람 말이 곧 결론이에요', letter:'H', flag:1}]},
+  {q:'급여는 어떻게 들어오나요?', opts:[{t:'날짜에 딱 맞춰 정확히 들어와요', letter:'P', flag:0},{t:'밀리거나 액수가 안 맞을 때가 있어요', letter:'D', flag:1}]},
+  {q:'근로계약서, 어떻게 갖고 계세요?', opts:[{t:'서명본을 저도 갖고 있어요', letter:'C', flag:0},{t:'구두로만 얘기하고 끝났어요', letter:'U', flag:1}]},
+];
+const mbtiTypes = {
+  0:{name:'등대형', desc:'멀리서도 잘 보이는, 드물게 안정적인 일터예요. 지금의 조건을 잘 기록해두고 오래 지켜보세요.'},
+  1:{name:'항해 가능형', desc:'대체로 무난하지만 흐린 구간이 하나 있어요. 걸리는 지점만 짚어 개선을 요청해볼 만해요.'},
+  2:{name:'풍랑주의형', desc:'신호가 두 개 이상 겹쳐요. 수첩에 기록을 쌓아두고, 필요하면 상담 창구를 이용해보세요.'},
+  3:{name:'표류형', desc:'여러 위험 신호가 함께 나타났어요. 혼자 버티지 말고 SOS로 연결되는 상담을 꼭 받아보세요.'},
+};
+let mbtiIdx = 0, mbtiLetters = [], mbtiFlags = 0;
+function renderMbti(){
+  const el = document.getElementById('mbtiCard');
+  if(mbtiIdx >= mbtiQuestions.length){
+    const tier = mbtiFlags <= 0 ? 0 : mbtiFlags===1 ? 1 : mbtiFlags===2 ? 2 : 3;
+    const type = mbtiTypes[tier];
+    const code = mbtiLetters.join('');
+    el.innerHTML = '<div class="quiz-result">'+
+      '<div class="q-num">우리 회사는</div>'+
+      '<div class="mbti-code">'+code+'</div>'+
+      '<h3>'+type.name+'</h3>'+
+      '<p class="lede" style="margin-bottom:6px;">'+type.desc+'</p>'+
+      '<button class="share-btn" onclick="shareMbti(\''+type.name+'\',\''+code+'\')">결과 공유하기</button>'+
+      '<button class="restart-link" onclick="mbtiIdx=0;mbtiLetters=[];mbtiFlags=0;renderMbti();">다시 진단하기</button></div>';
+    trackEvent('mbti_complete', { code: code, type: type.name });
+    return;
+  }
+  const q = mbtiQuestions[mbtiIdx];
+  let bars = '';
+  for(let i=0;i<mbtiQuestions.length;i++) bars += '<i class="'+(i<mbtiIdx?'done':'')+'"></i>';
+  let opts = q.opts.map(o=>'<button class="q-opt" onclick="answerMbti(\''+o.letter+'\','+o.flag+')">'+o.t+'</button>').join('');
+  el.innerHTML = '<div class="q-progress">'+bars+'</div>'+
+    '<div class="q-num">질문 '+(mbtiIdx+1)+' / '+mbtiQuestions.length+'</div>'+
+    '<p class="q-text">'+q.q+'</p>'+
+    '<div class="q-options">'+opts+'</div>';
+}
+function answerMbti(letter, flag){ mbtiLetters.push(letter); mbtiFlags += flag; mbtiIdx++; renderMbti(); }
+renderMbti();
+
+/* ---------------- 수첩 ---------------- */
+let notes = [];
+function renderNotes(){
+  const list = document.getElementById('noteList');
+  if(notes.length===0){ list.innerHTML = '<p class="empty-state">아직 기록이 없어요. 오늘 있었던 일을 한 줄이라도 남겨보세요.</p>'; return; }
+  list.innerHTML = notes.map(n=>'<div class="note-item"><div class="note-date">'+n.date+'</div><p class="post-body">'+n.text+'</p></div>').join('');
+}
+function addNote(){
+  const input = document.getElementById('noteInput');
+  const text = input.value.trim();
+  if(!text) return;
+  const now = new Date();
+  const date = now.getFullYear()+'.'+String(now.getMonth()+1).padStart(2,'0')+'.'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  notes.unshift({date, text: text.replace(/</g,'&lt;')});
+  input.value='';
+  renderNotes();
+  trackEvent('note_added', {}); // 내용은 전송하지 않고, 기록했다는 사실만 집계
+}
+renderNotes();
+</script>
+
+<!-- ===== 라운지 공유 게시판 (Firebase Firestore, 무료 Spark 요금제로 충분) =====
+  1) console.firebase.google.com 에서 새 프로젝트 생성 (무료)
+  2) 왼쪽 메뉴 Firestore Database → 데이터베이스 만들기 → 프로덕션 모드, 지역은 asia-northeast3(서울) 추천
+  3) Firestore "규칙" 탭에 아래 규칙을 붙여넣기 (게시물 생성만 허용, 수정·삭제는 콘솔에서만):
+
+     rules_version = '2';
+     service cloud.firestore {
+       match /databases/{database}/documents {
+         match /lounge_posts/{postId} {
+           allow read: if true;
+           allow create: if request.resource.data.text is string
+                         && request.resource.data.text.size() > 0
+                         && request.resource.data.text.size() <= 500
+                         && request.resource.data.tag is string
+                         && request.resource.data.tag.size() <= 20;
+           allow update, delete: if false;
+         }
+       }
+     }
+
+  4) 프로젝트 설정(톱니바퀴) → 일반 → 내 앱 → </> (웹) 추가 → firebaseConfig 값을 아래에 붙여넣기
+-->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyCSw1qJSbWrRqbnAxR6J8Ko6mtWHkmywbM",
+    authDomain: "seongsu-compass.firebaseapp.com",
+    projectId: "seongsu-compass",
+    storageBucket: "seongsu-compass.firebasestorage.app",
+    messagingSenderId: "405081326197",
+    appId: "1:405081326197:web:54e175f364ade80ff56e3c"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const postsCol = collection(db, "lounge_posts");
+
+  // onclick="submitLoungePost()"에서 호출하려면 전역(window)에 노출해야 함
+  window.submitLoungePost = async function(){
+    const tagEl = document.getElementById('loungeTag');
+    const textEl = document.getElementById('loungeInput');
+    const text = textEl.value.trim();
+    if(!text) return;
+    if(text.length > 500){ alert('500자 이내로 적어주세요.'); return; }
+    const tag = (tagEl.value || '').trim().slice(0,20) || '익명';
+    try{
+      await addDoc(postsCol, { tag, text, createdAt: serverTimestamp() });
+      textEl.value = '';
+      tagEl.value = '';
+      if (typeof trackEvent === 'function') trackEvent('lounge_post_added', {}); // 글 내용은 전송하지 않음
+    }catch(e){
+      console.error(e);
+      alert('글 등록에 실패했어요. 잠시 후 다시 시도해주세요.');
+    }
+  };
+
+  const recentPostsQuery = query(postsCol, orderBy('createdAt', 'desc'), limit(30));
+  onSnapshot(recentPostsQuery, (snapshot)=>{
+    const list = document.getElementById('loungeList');
+    if(!list) return;
+    if(snapshot.empty){
+      list.innerHTML = '<p class="empty-state">아직 글이 없어요. 첫 이야기를 남겨보세요.</p>';
+      return;
+    }
+    list.innerHTML = snapshot.docs.map(doc=>{
+      const d = doc.data();
+      const when = d.createdAt && d.createdAt.toDate ? d.createdAt.toDate() : new Date();
+      const dateStr = when.getFullYear()+'.'+String(when.getMonth()+1).padStart(2,'0')+'.'+String(when.getDate()).padStart(2,'0');
+      const safeTag = (d.tag || '익명').replace(/</g,'&lt;');
+      const safeText = (d.text || '').replace(/</g,'&lt;');
+      return '<div class="post"><span class="post-tag">'+safeTag+'</span><div class="post-meta">'+dateStr+'</div><p class="post-body">'+safeText+'</p></div>';
+    }).join('');
+  }, (err)=>{
+    console.error(err);
+    const list = document.getElementById('loungeList');
+    if(list) list.innerHTML = '<p class="empty-state">글 목록을 불러오지 못했어요. firebaseConfig 설정을 확인해주세요.</p>';
+  });
+</script>
+</body>
+</html>
