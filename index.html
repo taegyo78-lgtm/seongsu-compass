@@ -2,61 +2,53 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>성수동컴파스 — 노동 권익 나침반</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>성수 팝업스토어 — 성수 유니온 랩</title>
 
-<!-- ===== 링크 공유 시 썸네일/미리보기 (Open Graph / Twitter Card) ===== -->
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="성수동컴파스">
-<meta property="og:title" content="성수동컴파스 — 노동 권익 나침반">
-<meta property="og:description" content="내 실질 시급, 못 받은 돈, 우리 회사 MBTI까지. 성수동에서 일하는 사람들을 위한 노동 권익 나침반.">
+<meta property="og:site_name" content="성수 팝업스토어">
+<meta property="og:title" content="성수 팝업스토어 — 사지 않아도 됩니다, 원래 당신 것이었으니까요">
+<meta property="og:description" content="일하며 놓친 임금과 권리를 무료로 확인하는 곳. 성수 유니온 랩이 만들었어요.">
 <meta property="og:image" content="https://seongsu-compass.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:url" content="https://seongsu-compass.vercel.app">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="성수동컴파스 — 노동 권익 나침반">
-<meta name="twitter:description" content="내 실질 시급, 못 받은 돈, 우리 회사 MBTI까지. 성수동에서 일하는 사람들을 위한 노동 권익 나침반.">
+<meta name="twitter:title" content="성수 팝업스토어 — 성수 유니온 랩">
+<meta name="twitter:description" content="일하며 놓친 임금과 권리를 무료로 확인하는 곳.">
 <meta name="twitter:image" content="https://seongsu-compass.vercel.app/og-image.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
-<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@500;700;900&family=Pretendard:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<!-- ===== 방문/전환 추적 (GA4) =====
-  측정 ID G-6RK4FNKLHW 사용 중 (Firebase 프로젝트 생성 시 자동 연결된 GA4 속성).
-  개인 식별 정보는 담지 않고, 탭 조회수·퀴즈 완료·공유 클릭 같은 "익명 집계" 이벤트만 남깁니다.
--->
+<!-- ===== 방문/전환 추적 (GA4) — 기존 성수동컴파스와 동일한 속성 그대로 사용 ===== -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-6RK4FNKLHW"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){ dataLayer.push(arguments); }
   gtag('js', new Date());
   gtag('config', 'G-6RK4FNKLHW', { anonymize_ip: true, allow_google_signals: false });
-  // 개인정보를 담지 않는 간단한 이벤트 로깅 헬퍼. GA4 스크립트가 아직 로드되기 전이거나
-  // 광고 차단기 때문에 gtag가 없을 때도 페이지가 죽지 않도록 try/catch로 감쌉니다.
   function trackEvent(name, params){
     try { gtag('event', name, params || {}); } catch(e) { /* GA 로드 실패 시 무시 */ }
   }
 </script>
 <style>
-  :root{
-    --ink:#182732;
-    --ink-soft:#3A4C58;
-    --ink-faint:#7C8A93;
-    --paper:#EFEAE0;
-    --paper-deep:#E3DCC9;
-    --card:#FBF9F4;
-    --brass:#AD7C2E;
-    --brass-soft:#D8B876;
-    --coral:#C6522E;
-    --coral-soft:#F1D9CE;
-    --moss:#43604F;
-    --moss-soft:#D9E3D6;
-    --line:#CFC6AF;
-    --radius-card: 4px;
-    --radius-pill: 999px;
-    --shadow: 0 1px 0 rgba(24,39,50,0.06);
+:root{
+    --paper:#EEF0EA;
+    --paper-deep:#E3E6DD;
+    --ink:#1D2B2A;
+    --ink-soft:#4B5A57;
+    --ink-faint:#8A968F;
+    --line:#C7CFC3;
+    --white:#FBFBF8;
+    --stamp:#B23A2E;
+    --stamp-soft:#F4E1DE;
+    --amber:#C4820F;
+    --amber-soft:#F2E3C7;
+    --confirm:#2F6B4F;
+    --confirm-soft:#DCEAE1;
+    --radius:2px;
+    --radius-pill:999px;
   }
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -64,607 +56,837 @@
     margin:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:'Pretendard', -apple-system, sans-serif;
-    -webkit-font-smoothing:antialiased;
+    font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
+    line-height:1.6;
   }
-  @media (prefers-reduced-motion: reduce){
-    html{scroll-behavior:auto;}
-    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  h1,h2,h3,.serif{
+    font-family:'Noto Serif KR',serif;
+    color:var(--ink);
+    margin:0;
   }
-  h1,h2,h3,.serif{font-family:'Fraunces', serif;}
   a{color:inherit;}
   button{font-family:inherit;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+  ::selection{background:var(--amber-soft);}
 
-  /* ---------- top bar ---------- */
-  .topbar{
-    position:sticky; top:0; z-index:40;
-    background:var(--ink);
-    color:var(--paper);
-    padding:12px 18px;
+  /* ---------- header ---------- */
+  header{
+    position:sticky;top:0;z-index:40;
+    background:rgba(238,240,234,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
   }
-  .topbar-inner{
-    max-width:720px; margin:0 auto;
-    display:flex; align-items:center; gap:12px;
+  .nav-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 0;
   }
-  .needle-wrap{width:30px;height:30px;flex:none;}
-  .brand{
-    font-family:'Fraunces', serif;
-    font-size:1.05rem;
-    font-weight:600;
-    letter-spacing:0.01em;
+  .brand{display:flex;align-items:baseline;gap:10px;}
+  .brand .mark{
+    font-family:'Noto Serif KR',serif;font-weight:900;font-size:20px;letter-spacing:-0.01em;
   }
-  .brand small{
-    display:block;
-    font-family:'Pretendard',sans-serif;
-    font-size:0.66rem;
-    font-weight:400;
-    color:#B9C3C9;
-    letter-spacing:0.02em;
-    margin-top:1px;
+  .brand .sub{font-size:12px;color:var(--ink-soft);border-left:1px solid var(--line);padding-left:10px;}
+  nav.links{display:flex;gap:24px;font-size:14px;color:var(--ink-soft);}
+  nav.links a{text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;transition:border-color .15s;cursor:pointer;}
+  nav.links a:hover{border-color:var(--ink-soft);}
+  .cart-btn{
+    display:flex;align-items:center;gap:8px;
+    background:var(--ink);color:var(--paper);
+    border:none;padding:9px 16px;font-size:14px;cursor:pointer;
+    font-family:'Pretendard';font-weight:600;
+    border-radius:var(--radius);
   }
-  .sos-btn{
-    margin-left:auto;
-    background:var(--coral);
-    color:#fff;
-    border:none;
-    border-radius:var(--radius-pill);
-    padding:7px 14px;
-    font-size:0.82rem;
-    font-weight:600;
-    cursor:pointer;
-    flex:none;
-    text-decoration:none;
-    display:inline-block;
-  }
-  .sos-btn:active{transform:translateY(1px);}
-
-  .tabs{
-    max-width:720px; margin:0 auto;
-    display:flex; gap:4px;
-    overflow-x:auto;
-    padding-top:10px;
-    scrollbar-width:none;
-  }
-  .tabs::-webkit-scrollbar{display:none;}
-  .tab{
-    flex:none;
-    background:transparent;
-    border:none;
-    color:#9FACB3;
-    padding:8px 10px 10px;
-    font-size:0.82rem;
-    cursor:pointer;
-    border-bottom:2px solid transparent;
-    display:flex; flex-direction:column; align-items:flex-start;
-    white-space:nowrap;
-  }
-  .tab .deg{
-    font-variant-numeric: tabular-nums;
-    font-size:0.66rem;
-    color:#6E7C84;
-    margin-bottom:2px;
-  }
-  .tab.active{color:#fff; border-bottom-color:var(--brass-soft);}
-  .tab.active .deg{color:var(--brass-soft);}
-
-  /* ---------- layout ---------- */
-  main{max-width:720px; margin:0 auto; padding:26px 18px 90px;}
-  section{display:none;}
-  section.active{display:block; animation:rise 0.35s ease both;}
-  @keyframes rise{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
-
-  .eyebrow{
-    font-size:0.78rem;
-    color:var(--brass);
-    font-weight:600;
-    margin:0 0 6px;
-  }
-  h1.page-title{
-    font-size:clamp(1.5rem, 5vw, 2.05rem);
-    font-weight:600;
-    margin:0 0 10px;
-    line-height:1.25;
-  }
-  .lede{
-    color:var(--ink-soft);
-    font-size:0.96rem;
-    line-height:1.6;
-    max-width:46ch;
-    margin:0 0 26px;
+  .cart-count{
+    background:var(--stamp);color:#fff;border-radius:50%;
+    width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center;
+    font-weight:700;
   }
 
-  .card{
-    background:var(--card);
+  /* ---------- hero ---------- */
+  .hero{padding:60px 0 52px;}
+  .hero-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:56px;align-items:center;}
+  .eyebrow-note{
+    display:inline-block;font-size:13px;color:var(--ink-soft);
+    border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:22px;
+  }
+  .hero h1{
+    font-size:40px;line-height:1.28;font-weight:700;letter-spacing:-0.015em;
+  }
+  .hero h1 em{font-style:normal;color:var(--stamp);}
+  .hero p.lede{
+    margin-top:20px;font-size:17px;color:var(--ink-soft);max-width:46ch;
+  }
+  .hero-cta{margin-top:30px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--ink);color:var(--paper);border:none;
+    padding:14px 26px;font-size:15px;font-weight:700;cursor:pointer;
+    border-radius:var(--radius);
+    font-family:'Pretendard';
+  }
+  .btn-ghost{
+    background:transparent;border:1px solid var(--ink);color:var(--ink);
+    padding:13px 22px;font-size:15px;font-weight:600;cursor:pointer;border-radius:var(--radius);
+  }
+  .hero-note{margin-top:14px;font-size:13px;color:var(--ink-soft);}
+
+  .receipt{
+    background:var(--white);
     border:1px solid var(--line);
-    border-radius:var(--radius-card);
-    padding:22px;
-    margin-bottom:16px;
+    padding:28px 26px 60px;
+    box-shadow:6px 6px 0 var(--paper-deep);
+    position:relative;
+  }
+  .receipt::before{
+    content:"";position:absolute;left:0;right:0;top:-6px;height:12px;
+    background:
+      linear-gradient(135deg, var(--paper) 25%, transparent 25%) 0 0/12px 12px,
+      linear-gradient(225deg, var(--paper) 25%, transparent 25%) 0 0/12px 12px;
+  }
+  .receipt-head{text-align:center;border-bottom:1px dashed var(--line);padding-bottom:14px;margin-bottom:14px;}
+  .receipt-head .t1{font-size:12px;letter-spacing:.08em;color:var(--ink-soft);}
+  .receipt-head .t2{font-family:'Noto Serif KR';font-weight:700;font-size:19px;margin-top:6px;}
+  .rline{display:flex;justify-content:space-between;font-size:14px;padding:7px 0;border-bottom:1px dotted var(--line);}
+  .rline .name{color:var(--ink-soft);}
+  .rline .amt{font-variant-numeric:tabular-nums;text-decoration:line-through;color:#9AA39A;}
+  .rline.total{border-bottom:none;border-top:1px solid var(--ink);margin-top:6px;padding-top:12px;font-weight:700;}
+  .rline.total .amt{text-decoration:none;color:var(--stamp);}
+  .stamp-mark{
+    position:absolute;right:18px;bottom:18px;
+    border:3px solid var(--stamp);color:var(--stamp);
+    font-weight:900;font-size:15px;padding:6px 10px;
+    transform:rotate(-9deg);border-radius:4px;
+    font-family:'Noto Serif KR';letter-spacing:.05em;
+    opacity:.85;
   }
 
-  /* ---------- calculator ---------- */
+  /* ---------- section shared ---------- */
+  section{padding:56px 0;}
+  .section-head{max-width:640px;margin-bottom:36px;}
+  .section-head .kicker{font-size:13px;color:var(--ink-soft);margin-bottom:10px;}
+  .section-head h2{font-size:27px;font-weight:700;letter-spacing:-0.01em;}
+  .section-head p{margin-top:12px;color:var(--ink-soft);font-size:15.5px;}
+
+  /* ---------- product grid ---------- */
+  #shop{background:var(--paper-deep);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  .card{
+    background:var(--white);padding:24px 22px 20px;
+    display:flex;flex-direction:column;gap:12px;position:relative;
+  }
+  .card.bling{
+    background:linear-gradient(180deg, var(--white) 0%, var(--amber-soft) 260%);
+    box-shadow:inset 0 0 0 1px var(--amber);
+  }
+  .card .badge{
+    position:absolute;top:18px;right:18px;
+    font-size:11px;font-weight:700;padding:4px 8px;border-radius:2px;
+    background:var(--stamp-soft);color:var(--stamp);
+  }
+  .card .badge.gold{background:var(--amber-soft);color:var(--amber);}
+  .card .icon{width:28px;height:28px;color:var(--ink);}
+  .card h3{font-size:16.5px;font-weight:700;margin-top:2px;}
+  .card p{font-size:13.2px;color:var(--ink-soft);margin:0;flex-grow:1;}
+  .price-row{display:flex;align-items:baseline;gap:10px;margin-top:2px;}
+  .price-row .label{font-size:11.5px;color:var(--ink-soft);}
+  .price-row .value{font-size:13px;font-weight:700;color:var(--ink);}
+  .add-btn{
+    margin-top:6px;background:var(--ink);color:var(--paper);border:none;
+    padding:11px 14px;font-size:13px;font-weight:700;cursor:pointer;border-radius:var(--radius);
+    transition:background .12s;
+  }
+  .add-btn.added{background:var(--confirm);}
+  .add-btn:hover{background:#000;}
+
+  /* ---------- how it works ---------- */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;}
+  .step{border-top:2px solid var(--ink);padding-top:16px;}
+  .step .n{font-family:'Noto Serif KR';font-size:22px;font-weight:700;color:var(--stamp);}
+  .step h4{font-size:15px;font-weight:700;margin:10px 0 6px;}
+  .step p{font-size:13.6px;color:var(--ink-soft);margin:0;}
+
+  /* ---------- cart drawer ---------- */
+  .overlay{
+    position:fixed;inset:0;background:rgba(20,25,20,.35);
+    opacity:0;pointer-events:none;transition:opacity .2s;z-index:60;
+  }
+  .overlay.open{opacity:1;pointer-events:auto;}
+  .drawer{
+    position:fixed;top:0;right:0;height:100%;width:400px;max-width:90vw;
+    background:var(--white);z-index:70;
+    transform:translateX(100%);transition:transform .25s ease;
+    display:flex;flex-direction:column;
+    box-shadow:-8px 0 24px rgba(0,0,0,.12);
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    padding:22px 24px;border-bottom:1px solid var(--line);
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .drawer-head h3{font-size:17px;}
+  .close-btn{background:none;border:none;font-size:20px;cursor:pointer;color:var(--ink-soft);line-height:1;}
+  .drawer-body{padding:18px 24px;overflow-y:auto;flex-grow:1;}
+  .drawer-empty{color:var(--ink-soft);font-size:14px;padding:30px 0;text-align:center;}
+  .drawer-item{
+    display:flex;justify-content:space-between;align-items:flex-start;
+    padding:14px 0;border-bottom:1px solid var(--line);gap:10px;
+  }
+  .drawer-item .ti{font-size:14.5px;font-weight:600;}
+  .drawer-item .td{font-size:12.5px;color:var(--ink-soft);margin-top:3px;}
+  .rm-btn{background:none;border:none;color:var(--ink-soft);font-size:13px;cursor:pointer;text-decoration:underline;flex-shrink:0;}
+  .drawer-foot{padding:20px 24px;border-top:1px solid var(--line);}
+  .drawer-foot .note{font-size:12.5px;color:var(--ink-soft);margin-bottom:14px;}
+  .drawer-foot .btn-primary{width:100%;text-align:center;text-decoration:none;display:block;}
+
+  footer{padding:32px 0;border-top:1px solid var(--line);}
+  .foot-row{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--ink-soft);flex-wrap:wrap;gap:10px;}
+  .foot-resources{display:flex;flex-wrap:wrap;gap:6px 14px;}
+  .foot-resources a{color:var(--ink-soft);text-decoration:underline;}
+  .share-prompt{
+    max-width:520px;margin:0 auto 40px;padding:18px 20px;text-align:center;
+    background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+  }
+  .share-prompt p{font-size:14px;color:var(--ink-soft);margin:0 0 10px;}
+
+  @media (max-width:980px){
+    .grid{grid-template-columns:repeat(2,1fr);}
+  }
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr 1fr;}
+    .hero h1{font-size:30px;}
+    nav.links{display:none;}
+  }
+  @media (max-width:520px){
+    .grid{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr;}
+  }
+
+  /* ================= 도구 섹션 (실제 컴파스 기능) ================= */
+  #tools{background:var(--paper);}
+  .tool-block{margin-bottom:64px;}
+  .tool-block:last-child{margin-bottom:0;}
+  .tool-eyebrow{font-size:13px;color:var(--amber);font-weight:700;margin-bottom:8px;}
+  .tool-title{font-size:26px;font-weight:700;margin-bottom:10px;}
+  .tool-lede{color:var(--ink-soft);font-size:15px;max-width:56ch;margin:0 0 24px;}
+
+  .tool-card{
+    background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+    padding:24px;margin-bottom:16px;
+  }
   .field{margin-bottom:20px;}
+  .field:last-child{margin-bottom:0;}
   .field label{
-    display:block;
-    font-size:0.84rem;
-    color:var(--ink-soft);
-    margin-bottom:8px;
-    font-weight:500;
+    display:block;font-size:13.5px;color:var(--ink-soft);margin-bottom:8px;font-weight:500;
   }
   .field input[type=number], .field input[type=text], .field select{
-    width:100%;
-    padding:12px 14px;
-    border:1px solid var(--line);
-    background:#fff;
-    border-radius:3px;
-    font-size:1rem;
-    font-family:inherit;
-    color:var(--ink);
+    width:100%;padding:12px 14px;border:1px solid var(--line);background:#fff;
+    border-radius:var(--radius);font-size:15px;font-family:inherit;color:var(--ink);
   }
-  .field input[type=range]{
-    width:100%; accent-color:var(--brass);
-  }
-  .range-row{display:flex; justify-content:space-between; font-size:0.78rem; color:var(--ink-faint); margin-top:4px;}
-  .suffix-row{display:flex; align-items:center; gap:8px;}
+  .field input[type=range]{width:100%;accent-color:var(--amber);}
+  .suffix-row{display:flex;align-items:center;gap:8px;}
   .suffix-row input{flex:1;}
-  .suffix{color:var(--ink-faint); font-size:0.85rem;}
+  .suffix{color:var(--ink-faint);font-size:13.5px;}
 
   .result-block{
-    background:var(--ink);
-    color:var(--paper);
-    border-radius:var(--radius-card);
-    padding:26px 22px;
-    text-align:left;
+    background:var(--ink);color:var(--paper);border-radius:var(--radius);
+    padding:26px 22px;text-align:left;margin-bottom:16px;
   }
-  .result-label{font-size:0.8rem; color:#B9C3C9; margin-bottom:6px;}
+  .result-label{font-size:12.5px;color:#C7CFC3;margin-bottom:6px;}
   .result-value{
-    font-family:'Fraunces', serif;
-    font-size:clamp(2.1rem, 9vw, 2.8rem);
-    font-weight:600;
-    line-height:1;
-    font-variant-numeric: tabular-nums;
+    font-family:'Noto Serif KR',serif;font-size:clamp(2.1rem,9vw,2.8rem);
+    font-weight:700;line-height:1;font-variant-numeric:tabular-nums;
   }
-  .result-value span{font-size:0.5em; color:#B9C3C9; font-weight:400;}
+  .result-value span{font-size:0.5em;color:#C7CFC3;font-weight:400;}
   .result-compare{
-    margin-top:14px;
-    padding-top:14px;
-    border-top:1px solid rgba(255,255,255,0.15);
-    font-size:0.85rem;
-    color:#D8DEE1;
-    line-height:1.6;
+    margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.15);
+    font-size:13.5px;color:#D6DED9;line-height:1.6;
   }
   .compare-bad{color:#E39B84;}
   .compare-ok{color:#9FCB9F;}
 
-  /* ---------- quiz ---------- */
-  .q-progress{
-    display:flex; gap:4px; margin-bottom:22px;
-  }
-  .q-progress i{
-    flex:1; height:3px; background:var(--line); border-radius:2px; display:block;
-  }
-  .q-progress i.done{background:var(--brass);}
-  .q-num{font-size:0.78rem; color:var(--brass); font-weight:600; margin-bottom:8px;}
-  .q-text{font-size:1.1rem; font-weight:500; margin:0 0 18px; line-height:1.5;}
-  .q-options{display:flex; flex-direction:column; gap:10px;}
+  .q-progress{display:flex;gap:4px;margin-bottom:22px;}
+  .q-progress i{flex:1;height:3px;background:var(--line);border-radius:2px;display:block;}
+  .q-progress i.done{background:var(--amber);}
+  .q-num{font-size:13px;color:var(--amber);font-weight:700;margin-bottom:8px;}
+  .q-text{font-size:17px;font-weight:500;margin:0 0 18px;line-height:1.5;color:var(--ink);}
+  .q-options{display:flex;flex-direction:column;gap:10px;}
   .q-opt{
-    text-align:left;
-    padding:14px 16px;
-    border:1px solid var(--line);
-    background:#fff;
-    border-radius:3px;
-    font-size:0.94rem;
-    cursor:pointer;
-    color:var(--ink);
+    text-align:left;padding:14px 16px;border:1px solid var(--line);background:#fff;
+    border-radius:var(--radius);font-size:15px;cursor:pointer;color:var(--ink);
   }
   .q-opt:active{background:var(--paper-deep);}
-  .quiz-result h3{font-size:1.3rem; margin:0 0 8px;}
+  .quiz-result h3{font-size:1.25rem;margin:0 0 8px;}
   .risk-badge{
-    display:inline-block; padding:4px 12px; border-radius:var(--radius-pill);
-    font-size:0.8rem; font-weight:600; margin-bottom:14px;
+    display:inline-block;padding:4px 12px;border-radius:var(--radius-pill);
+    font-size:13px;font-weight:700;margin-bottom:14px;
   }
-  .risk-low{background:var(--moss-soft); color:var(--moss);}
-  .risk-mid{background:#F1E4C2; color:#8A6412;}
-  .risk-high{background:var(--coral-soft); color:var(--coral);}
+  .risk-low{background:var(--confirm-soft);color:var(--confirm);}
+  .risk-mid{background:var(--amber-soft);color:#8A6412;}
+  .risk-high{background:var(--stamp-soft);color:var(--stamp);}
   .restart-link{
-    display:block; background:none; border:none; color:var(--brass); font-size:0.85rem;
-    text-decoration:underline; cursor:pointer; padding:0; margin-top:14px;
+    display:block;background:none;border:none;color:var(--amber);font-size:14px;
+    text-decoration:underline;cursor:pointer;padding:0;margin-top:14px;
   }
   .share-btn{
-    display:block; width:100%; margin-top:16px;
-    background:var(--ink); color:var(--paper); border:none;
-    padding:13px 16px; border-radius:3px; font-size:0.92rem; font-weight:600; cursor:pointer;
+    display:block;width:100%;margin-top:16px;
+    background:var(--ink);color:var(--paper);border:none;
+    padding:13px 16px;border-radius:var(--radius);font-size:15px;font-weight:700;cursor:pointer;
+    text-align:center;
   }
   .share-btn:active{transform:translateY(1px);}
-  .share-btn:disabled{background:var(--line); color:var(--ink-faint); cursor:not-allowed;}
+  .share-btn:disabled{background:var(--line);color:var(--ink-faint);cursor:not-allowed;}
   .share-btn:disabled:active{transform:none;}
-  .mbti-code{
-    font-family:'Fraunces', serif; font-size:1.9rem; font-weight:600; letter-spacing:0.01em;
-    margin:4px 0 2px;
-  }
-  .mbti-subtitle{
-    font-size:0.82rem; color:var(--ink-faint); margin:0 0 16px;
-  }
-
-  /* ---------- lounge ---------- */
-  .post{border-bottom:1px solid var(--line); padding:16px 0;}
-  .post:last-child{border-bottom:none;}
-  .post-meta{font-size:0.76rem; color:var(--ink-faint); margin-bottom:6px;}
-  .post-body{font-size:0.92rem; line-height:1.6; margin:0;}
-  .post-tag{
-    display:inline-block; font-size:0.72rem; background:var(--paper-deep);
-    color:var(--ink-soft); padding:2px 8px; border-radius:var(--radius-pill); margin-bottom:8px;
-  }
-  .post-actions{ display:flex; align-items:center; gap:14px; margin-top:10px; }
-  .like-btn{
-    background:none; border:none; color:var(--ink-faint); font-size:0.8rem;
-    cursor:pointer; padding:0; display:flex; align-items:center; gap:4px;
-  }
-  .like-btn.liked{ color:var(--coral); cursor:default; }
-  .comment-toggle{
-    background:none; border:none; color:var(--brass); font-size:0.78rem;
-    cursor:pointer; padding:0; text-decoration:underline;
-  }
-  .comment-box{ margin-top:10px; padding-top:10px; border-top:1px dashed var(--line); }
-  .comment-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:8px; }
-  .comment-item{
-    font-size:0.82rem; color:var(--ink-soft); background:var(--paper);
-    border-radius:4px; padding:8px 10px; line-height:1.45;
-  }
-  .comment-actions{ display:flex; align-items:center; gap:12px; margin-top:6px; }
-  .comment-actions .like-btn{ font-size:0.74rem; }
-  .reply-toggle{
-    background:none; border:none; color:var(--brass); font-size:0.74rem;
-    cursor:pointer; padding:0; text-decoration:underline;
-  }
-  .reply-list{ display:flex; flex-direction:column; gap:6px; margin:8px 0 0 16px; }
-  .reply-item{
-    font-size:0.78rem; color:var(--ink-soft); background:var(--card);
-    border-radius:4px; padding:7px 9px; line-height:1.4; border-left:2px solid var(--line);
-  }
-  .reply-compose{ display:flex; gap:6px; margin:8px 0 0 16px; }
-  .comment-compose{ display:flex; gap:6px; }
-  .comment-input{
-    flex:1; padding:8px 10px; border:1px solid var(--line); border-radius:4px;
-    font-size:0.82rem; font-family:inherit; background:var(--card); color:var(--ink);
-  }
-  .comment-submit{
-    flex:none; background:var(--ink); color:var(--paper); border:none;
-    padding:8px 14px; border-radius:4px; font-size:0.8rem; font-weight:600; cursor:pointer;
-  }
   .compose-note{
-    font-size:0.82rem; color:var(--ink-faint); text-align:center; padding:14px;
-    border:1px dashed var(--line); border-radius:3px;
+    font-size:13.5px;color:var(--ink-faint);text-align:center;padding:14px;
+    border:1px dashed var(--line);border-radius:var(--radius);
   }
+  .empty-state{color:var(--ink-faint);font-size:14.5px;text-align:center;padding:20px 0;}
 
-  /* ---------- notebook ---------- */
-  textarea{
-    width:100%; min-height:90px; padding:12px 14px; border:1px solid var(--line);
-    border-radius:3px; font-family:inherit; font-size:0.94rem; resize:vertical;
-  }
-  .note-add{
-    margin-top:10px; background:var(--ink); color:var(--paper); border:none;
-    padding:11px 18px; border-radius:3px; font-size:0.88rem; font-weight:600; cursor:pointer;
-  }
-  .note-item{
-    border-left:2px solid var(--brass); padding:4px 0 4px 14px; margin-bottom:14px;
-  }
-  .note-date{font-size:0.74rem; color:var(--ink-faint); margin-bottom:3px;}
-  .empty-state{color:var(--ink-faint); font-size:0.88rem; text-align:center; padding:20px 0;}
-  .session-note{font-size:0.76rem; color:var(--ink-faint); margin-top:16px;}
-
-  .share-prompt{
-    max-width:520px; margin:12px auto 0; padding:18px 20px; text-align:center;
-    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-card);
-  }
-  .share-prompt p{ font-size:0.88rem; color:var(--ink-soft); margin:0; }
-  .foot-resources{
-    max-width:720px; margin:0 auto; padding:16px 18px 40px;
-    display:flex; flex-wrap:wrap; gap:6px 14px;
-    font-size:0.76rem; color:var(--ink-faint);
-  }
-  .foot-resources a{ color:var(--ink-soft); text-decoration:underline; }
-
-  /* ---------- 성수 노동온도 ---------- */
-  .mood-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:8px;}
+  /* 노동온도 */
+  .mood-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;}
   .mood-btn{
-    display:flex; flex-direction:column; align-items:center; gap:4px;
-    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-card);
-    padding:14px 4px; font-size:1.6rem; cursor:pointer; color:var(--ink);
+    display:flex;flex-direction:column;align-items:center;gap:4px;
+    background:var(--white);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px 4px;font-size:1.6rem;cursor:pointer;color:var(--ink);
   }
-  .mood-btn span{font-size:0.66rem; color:var(--ink-soft); font-weight:600;}
-  .mood-btn.selected{border-color:var(--coral); background:var(--coral-soft);}
-  .issue-grid{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;}
+  .mood-btn span{font-size:11px;color:var(--ink-soft);font-weight:600;}
+  .mood-btn.selected{border-color:var(--stamp);background:var(--stamp-soft);}
+  .issue-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
   .issue-chip{
-    background:var(--card); border:1px solid var(--line); border-radius:var(--radius-pill);
-    padding:9px 15px; font-size:0.82rem; cursor:pointer; color:var(--ink-soft);
+    background:var(--white);border:1px solid var(--line);border-radius:var(--radius-pill);
+    padding:9px 15px;font-size:13.5px;cursor:pointer;color:var(--ink-soft);
   }
-  .issue-chip.selected{border-color:var(--brass); background:var(--brass-soft); color:var(--ink); font-weight:600;}
+  .issue-chip.selected{border-color:var(--amber);background:var(--amber-soft);color:var(--ink);font-weight:600;}
   .temp-bar-row{margin-bottom:14px;}
-  .temp-bar-label{display:flex; justify-content:space-between; font-size:0.88rem; margin-bottom:5px;}
-  .temp-bar-track{background:var(--paper-deep); border-radius:var(--radius-pill); height:10px; overflow:hidden;}
-  .temp-bar-fill{background:var(--coral); height:100%;}
-  .temp-rank-item{display:flex; align-items:center; gap:10px; padding:11px 0; border-top:1px solid var(--line);}
+  .temp-bar-label{display:flex;justify-content:space-between;font-size:14.5px;margin-bottom:5px;}
+  .temp-bar-track{background:var(--paper-deep);border-radius:var(--radius-pill);height:10px;overflow:hidden;}
+  .temp-bar-fill{background:var(--stamp);height:100%;}
+  .temp-rank-item{display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--line);}
   .temp-rank-item:first-child{border-top:none;}
   .temp-rank-medal{font-size:1.3rem;}
+
+  /* 연봉 백분위 */
+  .percentile-callout{text-align:center;}
+  .percentile-label{font-size:14px;color:var(--ink-faint);margin-bottom:6px;}
+  .percentile-value{font-size:1.3rem;font-weight:700;color:var(--ink);margin-bottom:14px;}
+  .percentile-value b{color:var(--stamp);font-size:1.6rem;}
+  .percentile-bar-track{
+    position:relative;height:10px;border-radius:var(--radius-pill);
+    background:linear-gradient(to right, var(--paper-deep), var(--amber-soft), var(--stamp));
+    margin:0 4px;
+  }
+  .percentile-marker{
+    position:absolute;top:-5px;width:20px;height:20px;margin-left:-10px;
+    background:var(--ink);border:3px solid var(--paper);border-radius:50%;
+  }
+  .percentile-scale-labels{display:flex;justify-content:space-between;font-size:12px;color:var(--ink-faint);margin-top:6px;}
+
+  /* 라운지 */
+  .post{border-bottom:1px solid var(--line);padding:16px 0;}
+  .post:last-child{border-bottom:none;}
+  .post-meta{font-size:12.5px;color:var(--ink-faint);margin-bottom:6px;}
+  .post-body{font-size:15px;line-height:1.6;margin:0;}
+  .post-tag{
+    display:inline-block;font-size:12px;background:var(--paper-deep);
+    color:var(--ink-soft);padding:2px 8px;border-radius:var(--radius-pill);margin-bottom:8px;
+  }
+  .post-actions{display:flex;align-items:center;gap:14px;margin-top:10px;}
+  .like-btn{
+    background:none;border:none;color:var(--ink-faint);font-size:13.5px;
+    cursor:pointer;padding:0;display:flex;align-items:center;gap:4px;
+  }
+  .like-btn.liked{color:var(--stamp);cursor:default;}
+  .comment-toggle{
+    background:none;border:none;color:var(--amber);font-size:13px;
+    cursor:pointer;padding:0;text-decoration:underline;
+  }
+  .comment-box{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line);}
+  .comment-list{display:flex;flex-direction:column;gap:8px;margin-bottom:8px;}
+  .comment-item{
+    font-size:13.5px;color:var(--ink-soft);background:var(--paper);
+    border-radius:4px;padding:8px 10px;line-height:1.45;
+  }
+  .comment-actions{display:flex;align-items:center;gap:12px;margin-top:6px;}
+  .comment-actions .like-btn{font-size:12.5px;}
+  .reply-toggle{
+    background:none;border:none;color:var(--amber);font-size:12.5px;
+    cursor:pointer;padding:0;text-decoration:underline;
+  }
+  .reply-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 0 16px;}
+  .reply-item{
+    font-size:13px;color:var(--ink-soft);background:var(--white);
+    border-radius:4px;padding:7px 9px;line-height:1.4;border-left:2px solid var(--line);
+  }
+  .reply-compose{display:flex;gap:6px;margin:8px 0 0 16px;}
+  .comment-compose{display:flex;gap:6px;}
+  .comment-input{
+    flex:1;padding:8px 10px;border:1px solid var(--line);border-radius:4px;
+    font-size:13.5px;font-family:inherit;background:var(--white);color:var(--ink);
+  }
+  .comment-submit{
+    flex:none;background:var(--ink);color:var(--paper);border:none;
+    padding:8px 14px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;
+  }
+
+  /* 수첩 */
+  textarea{
+    width:100%;min-height:90px;padding:12px 14px;border:1px solid var(--line);
+    border-radius:var(--radius);font-family:inherit;font-size:15px;resize:vertical;
+  }
+  .note-add{
+    margin-top:10px;background:var(--ink);color:var(--paper);border:none;
+    padding:11px 18px;border-radius:var(--radius);font-size:14px;font-weight:700;cursor:pointer;
+  }
+  .note-item{border-left:2px solid var(--amber);padding:4px 0 4px 14px;margin-bottom:14px;}
+  .note-date{font-size:12px;color:var(--ink-faint);margin-bottom:3px;}
+  .session-note{font-size:12.5px;color:var(--ink-faint);margin-top:16px;}
 </style>
 </head>
 <body>
 
-<div class="topbar">
-  <div class="topbar-inner">
-    <div class="needle-wrap">
-      <svg id="needle" viewBox="0 0 40 40" style="transition:transform 0.5s cubic-bezier(.2,.8,.2,1);">
-        <circle cx="20" cy="20" r="18" fill="none" stroke="#4A5A64" stroke-width="1.5"/>
-        <polygon points="20,6 24,20 20,34 16,20" fill="#D8B876"/>
-        <polygon points="20,6 24,20 20,20" fill="#F1D9CE"/>
-        <circle cx="20" cy="20" r="2" fill="#EFEAE0"/>
-      </svg>
+<header>
+  <div class="wrap nav-row">
+    <div class="brand">
+      <span class="mark">성수 팝업스토어</span>
+      <span class="sub">성수 유니온 랩</span>
     </div>
-    <div class="brand">성수동컴파스<small>노동 권익 나침반</small></div>
-    <!-- 지금은 실제 1:1 상담창구가 없어 nodong.kr로 바로 연결합니다. 나중에 온라인/오프라인
-         1:1 상담창구가 생기면 이 한 줄의 href만 바꾸면 됩니다. -->
-    <a class="sos-btn" href="https://www.nodong.kr/index.php" target="_blank" rel="noopener">SOS</a>
+    <nav class="links">
+      <a onclick="scrollToId('shop')">확인하기</a>
+      <a onclick="scrollToId('tools')">도구 모음</a>
+      <a onclick="scrollToId('how')">이용 방법</a>
+      <a onclick="scrollToId('helped')">이런 도움</a>
+    </nav>
+    <button class="cart-btn" onclick="openCart()">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.5 3h2l2.6 12.6a2 2 0 0 0 2 1.6h8.4a2 2 0 0 0 2-1.6L21.5 7H6"/></svg>
+      <span>장바구니</span>
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
   </div>
-  <nav class="tabs" id="tabs"></nav>
-</div>
+</header>
 
-<main>
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow-note">파는 곳이 아니라, 돌려주는 곳입니다</div>
+      <h1>사지 않아도 됩니다.<br>원래 <em>당신 것</em>이었으니까요.</h1>
+      <p class="lede">일하며 놓친 임금과 권리를 확인하는 곳입니다. 결제는 없습니다 — 확인하고, 필요하면 무료 상담으로 연결해 드립니다.</p>
+      <div class="hero-cta">
+        <button class="btn-primary" onclick="scrollToId('shop')">지금 확인하기</button>
+        <a class="btn-ghost" href="https://www.nodong.kr/index.php" target="_blank" rel="noopener" style="text-decoration:none;">바로 상담 받기</a>
+      </div>
+      <p class="hero-note">상담은 무료이며, 확인한다고 해서 아무것도 청구되지 않습니다.</p>
+    </div>
+    <div class="receipt">
+      <div class="receipt-head">
+        <div class="t1">노동 영수증 · WORK RECEIPT</div>
+        <div class="t2">받았어야 할 것들</div>
+      </div>
+      <div class="rline"><span class="name">초과근무수당</span><span class="amt">미지급</span></div>
+      <div class="rline"><span class="name">미사용 연차수당</span><span class="amt">미지급</span></div>
+      <div class="rline"><span class="name">퇴직금 정산</span><span class="amt">미확인</span></div>
+      <div class="rline"><span class="name">최저임금 차액</span><span class="amt">미확인</span></div>
+      <div class="rline total"><span class="name">확인이 필요한 항목</span><span class="amt">8건</span></div>
+      <div class="stamp-mark">확인 필요</div>
+    </div>
+  </div>
+</section>
 
-  <!-- ===== 연봉비교 (시급계산 통합) ===== -->
-  <section id="wage" class="active">
-    <p class="eyebrow">000° 정북 — 지금 내 위치</p>
-    <h1 class="page-title">연봉비교</h1>
-    <p class="lede">우리 회사, 성수동에서 연봉이 어느 정도일까? 회사명을 검색해보고, 내 연봉·실질시급까지 한 번에 확인해요.</p>
+<section id="shop">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">진열대</div>
+      <h2>혹시, 이런 적 있으세요</h2>
+      <p>계산기가 있는 항목은 바로 확인할 수 있고, 없는 항목은 담아두시면 상담 신청 시 함께 정리됩니다.</p>
+    </div>
+    <div class="grid" id="productGrid"></div>
+  </div>
+</section>
 
-    <div class="card">
-      <div class="field">
-        <label for="companySearch">회사명 검색</label>
-        <div class="suffix-row">
-          <input type="text" id="companySearch" placeholder="예: 무신사" maxlength="40">
-          <button class="comment-submit" style="flex:none;" onclick="searchCompanySalary()">검색</button>
+<section id="how">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">이용 방법</div>
+      <h2>네 단계면 충분합니다</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="n">1</div>
+        <h4>해당 항목 확인</h4>
+        <p>진열대에서 나에게 해당하는 항목을 고릅니다. 정답이 아니어도 괜찮습니다.</p>
+      </div>
+      <div class="step">
+        <div class="n">2</div>
+        <h4>바로 확인 또는 담아두기</h4>
+        <p>계산기가 있으면 그 자리에서 확인하고, 없으면 담아둡니다. 결제 정보는 필요 없습니다.</p>
+      </div>
+      <div class="step">
+        <div class="n">3</div>
+        <h4>무료 상담 연결</h4>
+        <p>확인한 결과나 담아둔 목록을 가지고, 원할 때 무료 상담으로 바로 연결됩니다.</p>
+      </div>
+      <div class="step">
+        <div class="n">4</div>
+        <h4>확인 및 회수</h4>
+        <p>실제로 못 받은 것이 확인되면, 되찾는 과정을 함께 진행합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="helped">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="helped-tag" style="display:inline-block;font-size:12px;background:var(--amber-soft);color:var(--amber);padding:4px 9px;border-radius:2px;font-weight:700;margin-bottom:16px;">예시로 보는 도움의 형태</span>
+      <h2 style="margin-top:8px;">이런 식으로 도와드립니다</h2>
+      <p>아래는 실제 후기가 아니라, 상담이 어떻게 진행되는지 보여드리기 위한 예시입니다.</p>
+    </div>
+    <div class="helped-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
+      <div class="helped-card" style="background:var(--paper);border:1px solid var(--line);padding:22px;">
+        <div class="who" style="font-size:13px;color:var(--ink-soft);margin-bottom:10px;">예시 · 매장 근무, 20대</div>
+        <div class="quote" style="font-size:14.5px;line-height:1.65;">"연차수당을 계산해본 적이 없었는데, 상담을 통해 놓친 부분을 처음 확인했어요."</div>
+      </div>
+      <div class="helped-card" style="background:var(--paper);border:1px solid var(--line);padding:22px;">
+        <div class="who" style="font-size:13px;color:var(--ink-soft);margin-bottom:10px;">예시 · 사무직, 30대</div>
+        <div class="quote" style="font-size:14.5px;line-height:1.65;">"야근이 당연하다고 생각했는데, 수당 계산 기준을 알고 나니 다르게 보이더라고요."</div>
+      </div>
+      <div class="helped-card" style="background:var(--paper);border:1px solid var(--line);padding:22px;">
+        <div class="who" style="font-size:13px;color:var(--ink-soft);margin-bottom:10px;">예시 · 물류·배송, 20대</div>
+        <div class="quote" style="font-size:14.5px;line-height:1.65;">"퇴사 전에 확인했으면 좋았을 것들을, 상담에서 하나씩 짚어주셨어요."</div>
+      </div>
+    </div>
+  </div>
+  <style>@media (max-width:860px){.helped-grid{grid-template-columns:1fr !important;}}</style>
+</section>
+
+<section id="tools">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">도구 모음</div>
+      <h2>바로 확인할 수 있는 것들</h2>
+      <p>아래 도구들은 실제로 계산·저장되는 기능이에요. 이름이나 회사명은 남기지 않아도 됩니다.</p>
+    </div>
+
+    <!-- ===== 최저임금 위반여부 → 연봉비교(실질시급+백분위+회사검색) ===== -->
+    <div class="tool-block" id="tool-wage">
+      <p class="tool-eyebrow">최저임금 위반 여부 확인</p>
+      <h3 class="tool-title">연봉비교</h3>
+      <p class="tool-lede">회사명을 검색해보고, 내 연봉·실질시급까지 한 번에 확인해요.</p>
+
+      <div class="tool-card">
+        <div class="field">
+          <label for="companySearch">회사명 검색</label>
+          <div class="suffix-row">
+            <input type="text" id="companySearch" placeholder="예: 무신사" maxlength="40">
+            <button class="comment-submit" style="flex:none;" onclick="searchCompanySalary()">검색</button>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="card" id="companyResultCard" style="margin-top:12px; display:none;"></div>
+      <div class="tool-card" id="companyResultCard" style="display:none;"></div>
 
-    <p class="compose-note" style="text-align:left; margin:20px 0 26px;">💡 <b>포괄임금제란?</b> 연장·야간·휴일수당을 미리 급여에 포함해서 계약하는 방식이에요. 문제는 실제로 일한 시간이 계약서에 정해둔 시간보다 많아도, 회사가 별도로 더 주지 않는 경우가 많다는 거예요.</p>
+      <p class="compose-note" style="text-align:left;">💡 <b>포괄임금제란?</b> 연장·야간·휴일수당을 미리 급여에 포함해서 계약하는 방식이에요. 문제는 실제로 일한 시간이 계약서에 정해둔 시간보다 많아도, 회사가 별도로 더 주지 않는 경우가 많다는 거예요.</p>
 
-    <div class="card">
-      <div class="field">
-        <label for="salary">계약서상 올해 연봉 (만원)</label>
-        <input type="number" id="salary" placeholder="예: 2800" inputmode="numeric" value="2800">
-      </div>
-
-      <div class="field">
-        <label for="otCount">일주일 평균 야근 횟수</label>
-        <select id="otCount">
-          <option value="0">야근 없음</option>
-          <option value="1">주 1회</option>
-          <option value="2" selected>주 2회</option>
-          <option value="3">주 3회</option>
-          <option value="4">주 4회</option>
-          <option value="5">주 5회</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label for="otHours">평균 야근 근무시간 (회당, 시간)</label>
-        <div class="suffix-row">
-          <input type="range" id="otHours" min="0" max="5" step="0.5" value="1.5">
-          <span class="suffix" id="otHoursLabel">1.5h</span>
+      <div class="tool-card">
+        <div class="field">
+          <label for="salary">계약서상 올해 연봉 (만원)</label>
+          <input type="number" id="salary" placeholder="예: 2800" inputmode="numeric" value="2800">
+        </div>
+        <div class="field">
+          <label for="otCount">일주일 평균 야근 횟수</label>
+          <select id="otCount">
+            <option value="0">야근 없음</option>
+            <option value="1">주 1회</option>
+            <option value="2" selected>주 2회</option>
+            <option value="3">주 3회</option>
+            <option value="4">주 4회</option>
+            <option value="5">주 5회</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="otHours">평균 야근 근무시간 (회당, 시간)</label>
+          <div class="suffix-row">
+            <input type="range" id="otHours" min="0" max="5" step="0.5" value="1.5">
+            <span class="suffix" id="otHoursLabel">1.5h</span>
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="result-block">
-      <div class="result-label">추정 실제 시급 (야근시간 포함 환산)</div>
-      <div class="result-value" id="wageResult">₩0</div>
-      <div class="result-compare" id="wageCompare"></div>
-    </div>
-
-    <div class="card" id="salaryCompareCard" style="margin-top:16px;">
-      <div class="field-label" style="font-size:0.86rem; font-weight:600; color:var(--ink-soft); margin-bottom:2px;">내 연봉, 또래·전체 평균과 비교하면?</div>
-      <p style="font-size:0.76rem; color:var(--ink-faint); margin:0 0 14px;">국가데이터처 '2024년 임금근로일자리 소득 결과'(2026.2 발표) 기준</p>
-      <div id="salaryCompare"></div>
-    </div>
-
-    <button class="restart-link" id="contributeBtn" onclick="contributeSalaryData()">📊 이 정보로 성수동 데이터에 기여하기 (익명)</button>
-
-    <button class="share-btn" onclick="showSection('temperature')">🌡 다른 사람들은 얼마나 일할까?</button>
-  </section>
-
-  <!-- ===== 못받은 돈 계산기 ===== -->
-  <section id="unpaid">
-    <p class="eyebrow">045° 북동 — 3년치 청구 가능액</p>
-    <h1 class="page-title">내가 못 받은 돈 계산기</h1>
-    <p class="lede">젠틀몬스터 사례처럼, 연장근로수당이 제대로 계산·지급되지 않는 경우가 많아요. 대략 얼마를 못 받았을 수 있는지 가늠해봐요.</p>
-    <p class="compose-note" style="text-align:left; margin-bottom:26px;">📍 <b>성수동 실제 사례 기반</b> — 이 계산 공식은 성수동 소재 젠틀몬스터(아이아이컴바인드)에 대한 고용노동부 근로감독에서 실제 확인된 체불 사례(464명·약 4억 2,900만원, 1인 평균 92만원)를 바탕으로 만들었어요.</p>
-
-    <div class="card">
-      <div class="field">
-        <label for="upSalary">계약서상 올해 연봉 (만원)</label>
-        <input type="number" id="upSalary" placeholder="예: 3500" inputmode="numeric" value="3500">
+      <div class="result-block">
+        <div class="result-label">추정 실제 시급 (야근시간 포함 환산)</div>
+        <div class="result-value" id="wageResult">₩0</div>
+        <div class="result-compare" id="wageCompare"></div>
       </div>
-      <div class="field">
-        <label for="upOtHours">일주일 평균 연장근로시간 (기본 40시간 초과분, 시간)</label>
-        <div class="suffix-row">
-          <input type="range" id="upOtHours" min="0" max="30" step="1" value="10">
-          <span class="suffix" id="upOtHoursLabel">10h</span>
+
+      <div class="tool-card" id="salaryPercentileCard">
+        <div id="salaryPercentile"></div>
+      </div>
+
+      <div class="tool-card" id="salaryCompareCard">
+        <div style="font-size:13.5px;font-weight:700;color:var(--ink-soft);margin-bottom:2px;">내 연봉, 또래·전체 평균과 비교하면?</div>
+        <p style="font-size:12px;color:var(--ink-faint);margin:0 0 14px;">국가데이터처 '2024년 임금근로일자리 소득 결과'(2026.2 발표) 기준</p>
+        <div id="salaryCompare"></div>
+      </div>
+
+      <button class="restart-link" id="contributeBtn" onclick="contributeSalaryData()">📊 이 정보로 성수동 데이터에 기여하기 (익명)</button>
+      <button class="share-btn" onclick="scrollToId('tool-temperature')">🌡 다른 사람들은 얼마나 일할까?</button>
+    </div>
+
+    <!-- ===== 초과근무수당 → 못받은 돈 계산기 ===== -->
+    <div class="tool-block" id="tool-unpaid">
+      <p class="tool-eyebrow">초과근무수당 확인</p>
+      <h3 class="tool-title">내가 못 받은 돈 계산기</h3>
+      <p class="tool-lede">젠틀몬스터 사례처럼, 연장근로수당이 제대로 계산·지급되지 않는 경우가 많아요. 대략 얼마를 못 받았을 수 있는지 가늠해봐요.</p>
+      <p class="compose-note" style="text-align:left;">📍 <b>성수동 실제 사례 기반</b> — 이 계산 공식은 성수동 소재 젠틀몬스터(아이아이컴바인드)에 대한 고용노동부 근로감독에서 실제 확인된 체불 사례(464명·약 4억 2,900만원, 1인 평균 92만원)를 바탕으로 만들었어요.</p>
+
+      <div class="tool-card">
+        <div class="field">
+          <label for="upSalary">계약서상 올해 연봉 (만원)</label>
+          <input type="number" id="upSalary" placeholder="예: 3500" inputmode="numeric" value="3500">
+        </div>
+        <div class="field">
+          <label for="upOtHours">일주일 평균 연장근로시간 (기본 40시간 초과분, 시간)</label>
+          <div class="suffix-row">
+            <input type="range" id="upOtHours" min="0" max="30" step="1" value="10">
+            <span class="suffix" id="upOtHoursLabel">10h</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="upMonths">이런 근무가 계속된 기간 (개월, 최대 36개월=3년)</label>
+          <div class="suffix-row">
+            <input type="range" id="upMonths" min="1" max="36" step="1" value="36">
+            <span class="suffix" id="upMonthsLabel">36개월</span>
+          </div>
         </div>
       </div>
-      <div class="field">
-        <label for="upMonths">이런 근무가 계속된 기간 (개월, 최대 36개월=3년)</label>
-        <div class="suffix-row">
-          <input type="range" id="upMonths" min="1" max="36" step="1" value="36">
-          <span class="suffix" id="upMonthsLabel">36개월</span>
+
+      <div class="result-block">
+        <div class="result-label">3년(소멸시효) 내 청구 가능 추정액</div>
+        <div class="result-value" id="upResult">₩0</div>
+        <div class="result-compare" id="upCompare"></div>
+      </div>
+
+      <p style="text-align:center;font-weight:700;font-size:1.02rem;margin:20px 0 8px;">💸 떼인돈, 받아드립니다</p>
+      <a class="share-btn" href="https://www.nodong.kr/index.php" target="_blank" rel="noopener" style="text-decoration:none;">노무사 상담 연결하기</a>
+
+      <p class="compose-note" style="margin-top:16px;text-align:left;">
+        ⚠️ 법률 자문이 아닌 <b>참고용 추정치</b>예요. 통상시급 × 1.5배(근로기준법 제56조) 기준으로만 계산했고, 야간·휴일수당·지연이자는 포함하지 않았어요.
+        실제 청구에는 근로계약서·급여명세서·근태기록(메신저 접속기록, 법인카드 사용내역 등도 증빙이 될 수 있어요)이 필요하고, 임금채권은
+        <b>퇴직 후에도 3년 이내</b>면 청구할 수 있어요.
+      </p>
+    </div>
+
+    <!-- ===== 4대보험 미가입 → 위험도진단 ===== -->
+    <div class="tool-block" id="tool-risk">
+      <p class="tool-eyebrow">4대보험 · 근로조건 위험 확인</p>
+      <h3 class="tool-title">일터 위험도 진단</h3>
+      <p class="tool-lede">아홉 가지 질문으로 지금 일하는 곳의 상태를 점검해요. 정답은 없어요, 지금 상황을 그대로 골라주세요.</p>
+      <div class="tool-card" id="riskCard"></div>
+    </div>
+
+    <!-- ===== 라운지 (블링) ===== -->
+    <div class="tool-block" id="tool-lounge">
+      <p class="tool-eyebrow">✨ 우리동네 이야기</p>
+      <h3 class="tool-title">우리동네 사람들 이러쿵저러쿵</h3>
+      <p class="tool-lede">이름도 회사명도 남기지 않아요. 우리동네 사람들이 조용히 나눈 이야기예요.</p>
+
+      <div class="tool-card">
+        <div class="field">
+          <label for="loungeTag">직군·업종 (선택)</label>
+          <input type="text" id="loungeTag" placeholder="예: 카페·오픈조, 편집숍·계약직" maxlength="20">
         </div>
+        <textarea id="loungeInput" placeholder="오늘 있었던 일, 궁금한 것을 익명으로 남겨보세요." maxlength="500"></textarea>
+        <button class="note-add" onclick="submitLoungePost()">올리기</button>
+      </div>
+
+      <div id="loungeList" class="tool-card">
+        <p class="empty-state">불러오는 중...</p>
       </div>
     </div>
 
-    <div class="result-block">
-      <div class="result-label">3년(소멸시효) 내 청구 가능 추정액</div>
-      <div class="result-value" id="upResult">₩0</div>
-      <div class="result-compare" id="upCompare"></div>
-    </div>
+    <!-- ===== 노동온도 (블링) ===== -->
+    <div class="tool-block" id="tool-temperature">
+      <p class="tool-eyebrow">✨ 오늘 다들 어때요</p>
+      <h3 class="tool-title">우리동네 날씨</h3>
+      <p class="tool-lede">오늘 하루 어땠어요? 익명으로 남기면 이번 주 우리 동네 신호에 더해져요.</p>
 
-    <p style="text-align:center; font-weight:700; font-size:1.02rem; margin:20px 0 8px;">💸 떼인돈, 받아드립니다</p>
-    <a class="share-btn" href="https://www.nodong.kr/index.php" target="_blank" rel="noopener" style="text-decoration:none; text-align:center;">노무사 상담 연결하기</a>
-    <button class="restart-link" onclick="showSection('temperature')">🌡 비슷한 경험이 있는지 보기</button>
-
-    <p class="compose-note" style="margin-top:16px; text-align:left;">
-      ⚠️ 법률 자문이 아닌 <b>참고용 추정치</b>예요. 통상시급 × 1.5배(근로기준법 제56조) 기준으로만 계산했고, 야간·휴일수당·지연이자는 포함하지 않았어요.
-      실제 청구에는 근로계약서·급여명세서·근태기록(메신저 접속기록, 법인카드 사용내역 등도 증빙이 될 수 있어요)이 필요하고, 임금채권은
-      <b>퇴직 후에도 3년 이내</b>면 청구할 수 있어요.
-    </p>
-  </section>
-
-  <!-- ===== 위험도 진단 ===== -->
-  <section id="risk">
-    <p class="eyebrow">090° 정동 — 지금 신호 읽기</p>
-    <h1 class="page-title">일터 위험도 진단</h1>
-    <p class="lede">아홉 가지 질문으로 지금 일하는 곳의 상태를 점검해요. 정답은 없어요, 지금 상황을 그대로 골라주세요.</p>
-    <div class="card" id="riskCard"></div>
-  </section>
-
-  <!-- ===== 회사 MBTI ===== -->
-  <section id="mbti">
-    <p class="eyebrow">180° 정남 — 우리 회사의 기질</p>
-    <h1 class="page-title">회사 MBTI</h1>
-    <p class="lede">우리 회사, 대체 어떤 곳일까? 6개 질문에 제일 "우리 회사스러운" 문장 딱 하나씩만 골라봐요. 1분이면 끝!</p>
-    <p class="compose-note" style="text-align:left; margin-bottom:26px;">💡 실제 경영학에서 조직문화를 나눌 때 쓰는 6가지 기준(OCAI)을 참고해서 간단하게 만들었어요.</p>
-    <div class="card" id="mbtiCard"></div>
-  </section>
-
-  <!-- ===== 성수 노동온도 ===== -->
-  <section id="temperature">
-    <p class="eyebrow">225° 남동 — 오늘의 신호</p>
-    <h1 class="page-title">성수 노동온도</h1>
-    <p class="lede">오늘 하루 어땠어요? 익명으로 남기면 이번 주 성수동 노동자들의 신호에 더해져요.</p>
-
-    <div class="card" id="tempFormCard">
-      <div class="field">
-        <label>오늘 일은 어땠나요?</label>
-        <div class="mood-grid" id="moodGrid">
-          <button type="button" class="mood-btn" data-mood="good">🙂<span>괜찮았어요</span></button>
-          <button type="button" class="mood-btn" data-mood="neutral">😐<span>그냥 그랬어요</span></button>
-          <button type="button" class="mood-btn" data-mood="hard">😩<span>힘들었어요</span></button>
-          <button type="button" class="mood-btn" data-mood="very_hard">🤯<span>정말 힘들었어요</span></button>
+      <div class="tool-card" id="tempFormCard">
+        <div class="field">
+          <label>오늘 일은 어땠나요?</label>
+          <div class="mood-grid" id="moodGrid">
+            <button type="button" class="mood-btn" data-mood="good">🙂<span>괜찮았어요</span></button>
+            <button type="button" class="mood-btn" data-mood="neutral">😐<span>그냥 그랬어요</span></button>
+            <button type="button" class="mood-btn" data-mood="hard">😩<span>힘들었어요</span></button>
+            <button type="button" class="mood-btn" data-mood="very_hard">🤯<span>정말 힘들었어요</span></button>
+          </div>
         </div>
+        <div class="field">
+          <label>무엇이 가장 힘들었나요? (복수 선택 가능)</label>
+          <div class="issue-grid" id="issueGrid"></div>
+        </div>
+        <div class="field">
+          <label for="tempComment">오늘 있었던 일을 한마디로 남겨보세요 (선택, 최대 200자)</label>
+          <textarea id="tempComment" maxlength="200" placeholder="예: 오늘도 퇴근하자마자 단톡방에 일이 올라왔어요."></textarea>
+        </div>
+        <button class="share-btn" id="tempSubmitBtn" onclick="submitTemperature()" disabled>오늘의 노동 남기기</button>
+        <button class="restart-link" onclick="showTemperatureResult()">제출 안 하고 이번 주 결과만 보기</button>
       </div>
-      <div class="field">
-        <label>무엇이 가장 힘들었나요? (복수 선택 가능)</label>
-        <div class="issue-grid" id="issueGrid"></div>
-      </div>
-      <div class="field">
-        <label for="tempComment">오늘 있었던 일을 한마디로 남겨보세요 (선택, 최대 200자)</label>
-        <textarea id="tempComment" maxlength="200" placeholder="예: 오늘도 퇴근하자마자 단톡방에 일이 올라왔어요."></textarea>
-      </div>
-      <button class="share-btn" id="tempSubmitBtn" onclick="submitTemperature()" disabled>오늘의 노동 남기기</button>
-      <button class="restart-link" onclick="showTemperatureResult()">제출 안 하고 이번 주 결과만 보기</button>
+
+      <div class="tool-card" id="tempResultCard" style="display:none;"></div>
     </div>
 
-    <div class="card" id="tempResultCard" style="display:none;"></div>
-  </section>
-
-  <!-- ===== 라운지 ===== -->
-  <section id="lounge">
-    <p class="eyebrow">270° 정서 — 조용히 나누는 곳</p>
-    <h1 class="page-title">라운지</h1>
-    <p class="lede">이름도 회사명도 남기지 않아요. 성수동에서 일하는 사람들이 조용히 나눈 이야기예요.</p>
-
-    <div class="card">
-      <div class="field">
-        <label for="loungeTag">직군·업종 (선택)</label>
-        <input type="text" id="loungeTag" placeholder="예: 카페·오픈조, 편집숍·계약직" maxlength="20">
+    <!-- ===== 수첩 (가판대엔 없음, 조용히 남겨둠) ===== -->
+    <div class="tool-block" id="tool-notebook">
+      <p class="tool-eyebrow">나만 보는 기록</p>
+      <h3 class="tool-title">수첩</h3>
+      <p class="tool-lede">그날그날 있었던 일을 짧게 적어두면, 나중에 큰 힘이 돼요. 날짜는 자동으로 붙어요.</p>
+      <div class="tool-card">
+        <textarea id="noteInput" placeholder="오늘 있었던 일을 적어보세요. 예: 저녁 8시 넘어서까지 일했는데 야근수당 얘기가 없었음."></textarea>
+        <button class="note-add" onclick="addNote()">기록 추가</button>
       </div>
-      <textarea id="loungeInput" placeholder="오늘 있었던 일, 궁금한 것을 익명으로 남겨보세요." maxlength="500"></textarea>
-      <button class="note-add" onclick="submitLoungePost()">올리기</button>
+      <div id="noteList"></div>
+      <p class="session-note">이 수첩은 이 기기·이 브라우저에만 저장돼요. 서버로 전송되지 않고, 다른 사람에게 보이지도 않아요.</p>
     </div>
 
-    <div id="loungeList" class="card">
-      <p class="empty-state">불러오는 중...</p>
-    </div>
-  </section>
-
-
-  <!-- ===== 수첩 ===== -->
-  <section id="notebook">
-    <p class="eyebrow">근무 기록 수첩</p>
-    <h1 class="page-title">수첩</h1>
-    <p class="lede">그날그날 있었던 일을 짧게 적어두면, 나중에 큰 힘이 돼요. 날짜는 자동으로 붙어요.</p>
-    <div class="card">
-      <textarea id="noteInput" placeholder="오늘 있었던 일을 적어보세요. 예: 저녁 8시 넘어서까지 일했는데 야근수당 얘기가 없었음."></textarea>
-      <button class="note-add" onclick="addNote()">기록 추가</button>
-    </div>
-    <div id="noteList"></div>
-    <p class="session-note">이 수첩은 이 기기·이 브라우저에만 저장돼요. 서버로 전송되지 않고, 다른 사람에게 보이지도 않아요. 다만 브라우저 데이터를 지우면 함께 사라지니, 중요한 기록은 따로 캡처해두는 걸 추천해요.</p>
-  </section>
-
-</main>
+  </div>
+</section>
 
 <div class="share-prompt">
   <p>이 도구, 주변에 필요한 사람 있을까요?</p>
-  <button class="share-btn" style="max-width:360px; margin:10px auto 0;" onclick="shareCompass()">🔗 컴파스 공유하기</button>
+  <button class="btn-primary" onclick="shareCompass()">🔗 팝업스토어 공유하기</button>
 </div>
 
-<footer class="foot-resources">
-  <span>그 외 상담창구 —</span>
-  <a href="tel:1350">고용노동부 1350</a>
-  <a href="tel:1644-3119">청소년근로권익센터 1644-3119</a>
-  <a href="tel:110">직장내괴롭힘 110</a>
+<footer>
+  <div class="wrap">
+    <div class="foot-row">
+      <span>성수 팝업스토어 · 성수 유니온 랩 · 한국노총 조직확대사업단</span>
+      <div class="foot-resources">
+        <a href="tel:1350">고용노동부 1350</a>
+        <a href="tel:1644-3119">청소년근로권익센터 1644-3119</a>
+        <a href="tel:110">직장내괴롭힘 110</a>
+      </div>
+    </div>
+  </div>
 </footer>
 
-<script>
-/* ---------------- nav ---------------- */
-const sections = [
-  {id:'wage', deg:'000°', label:'연봉비교'},
-  {id:'unpaid', deg:'045°', label:'못받은 돈 계산기'},
-  {id:'risk', deg:'090°', label:'위험도 진단'},
-  {id:'mbti', deg:'180°', label:'회사 MBTI'},
-  {id:'temperature', deg:'225°', label:'노동온도'},
-  {id:'lounge', deg:'270°', label:'라운지'},
-  {id:'notebook', deg:'—', label:'수첩'},
-];
-const tabsEl = document.getElementById('tabs');
-sections.forEach(s=>{
-  const b = document.createElement('button');
-  b.className = 'tab' + (s.id==='wage' ? ' active':'');
-  b.dataset.id = s.id;
-  b.innerHTML = '<span class="deg">'+s.deg+'</span>'+s.label;
-  b.onclick = ()=>showSection(s.id);
-  tabsEl.appendChild(b);
-});
-function showSection(id){
-  document.querySelectorAll('section').forEach(s=>s.classList.toggle('active', s.id===id));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.id===id));
-  const idx = sections.findIndex(s=>s.id===id);
-  const deg = idx>=0 && sections[idx].deg!=='—' ? parseInt(sections[idx].deg) : (idx*72);
-  document.getElementById('needle').style.transform = 'rotate('+deg+'deg)';
-  window.scrollTo({top:0, behavior:'smooth'});
-  trackEvent('tab_view', { tab_id: id });
-  if(id === 'temperature') enterTemperatureForm();
-}
-// 최초 진입 시(기본 탭 '연봉비교') 조회도 한 번 기록
-trackEvent('tab_view', { tab_id: 'wage' });
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>내가 못 받은 것들</h3>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot">
+    <div class="note">정확한 금액은 상담을 통해 확인해 드립니다. 아래 버튼을 누르면 무료 상담으로 바로 연결돼요.</div>
+    <a class="btn-primary" href="https://www.nodong.kr/index.php" target="_blank" rel="noopener">상담 연결하기</a>
+  </div>
+</div>
 
-/* ---------------- 공유(컴파스 전체) ---------------- */
+<script>
+/* ---------------- 스크롤 네비게이션 (기존 탭 시스템 대체) ---------------- */
+function scrollToId(id){
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ---------------- 공유(팝업스토어 전체) ---------------- */
 function shareCompass(){
   const shareUrl = window.location.href.split('#')[0];
-  const shareText = '성수동에서 일한다면 한 번 열어봐요 — 내 진짜 시급, 못 받은 돈, 우리 회사 유형까지 확인할 수 있어요.';
+  const shareText = '성수동에서 일한다면 한 번 열어봐요 — 놓친 임금과 권리를 무료로 확인할 수 있어요.';
   if (navigator.share) {
-    navigator.share({ title: '성수동컴파스', text: shareText, url: shareUrl })
-      .then(()=> trackEvent('share_click', { method:'native', source:'compass' }))
-      .catch(()=>{ /* 사용자가 공유를 취소한 경우 등은 조용히 무시 */ });
+    navigator.share({ title: '성수 팝업스토어', text: shareText, url: shareUrl })
+      .then(()=> trackEvent('share_click', { method:'native', source:'popupstore' }))
+      .catch(()=>{});
   } else if (navigator.clipboard) {
     navigator.clipboard.writeText(shareText + '\n' + shareUrl).then(()=>{
       alert('링크가 복사됐어요. 원하는 곳에 붙여넣기 해주세요!');
-      trackEvent('share_click', { method:'clipboard', source:'compass' });
+      trackEvent('share_click', { method:'clipboard', source:'popupstore' });
     });
   } else {
     alert('이 주소를 복사해서 공유해보세요: ' + shareUrl);
-    trackEvent('share_click', { method:'manual', source:'compass' });
+    trackEvent('share_click', { method:'manual', source:'popupstore' });
   }
 }
+
+/* ---------------- 진열대 상품: 계산기 있는 것(link)과 상담 전용(cart) 구분 ---------------- */
+const ICONS = {
+  clock: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>',
+  sun: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7"/></svg>',
+  box: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 8l9-4.5L21 8v8l-9 4.5L3 16z"/><path d="M3 8l9 4.5L21 8M12 12.5V21"/></svg>',
+  scale: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v18M6 8l-3 6a4 4 0 0 0 6 0zM18 8l-3 6a4 4 0 0 0 6 0zM12 3l6 3M12 3l-6 3M8 21h8"/></svg>',
+  shield: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/></svg>',
+  doc: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4M9.5 12h5M9.5 15.5h5"/></svg>',
+  chat: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3 1-4.5A8 8 0 1 1 21 12z"/></svg>',
+  thermo: '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 14.5V5a2 2 0 0 0-4 0v9.5a4 4 0 1 0 4 0z"/></svg>'
+};
+
+const PRODUCTS = [
+  {id:'minwage', type:'link', target:'tool-wage', icon:'scale', badge:'지금 바로 확인', title:'최저임금 위반 여부', desc:'시급으로 환산했을 때 최저임금보다 적게 받고 있는 것 같은 경우', price:'무료 · 즉시 확인'},
+  {id:'ot', type:'link', target:'tool-unpaid', icon:'clock', badge:'소멸시효 3년 임박', title:'초과근무수당', desc:'연장·야간·휴일 근무를 했는데 정해진 만큼 수당을 받지 못한 경우', price:'무료 · 즉시 확인'},
+  {id:'insurance', type:'link', target:'tool-risk', icon:'doc', badge:'확인 쉬움', title:'4대보험 · 근로조건', desc:'국민연금·건강보험·고용보험·산재보험 등 위험 신호를 종합 진단', price:'무료 · 즉시 확인'},
+  {id:'leave', type:'cart', icon:'sun', badge:null, title:'미사용 연차수당', desc:'퇴사하거나 연차를 다 못 쓰고 넘어갔는데 수당으로 정산받지 못한 경우', price:'사람마다 다름 · 상담에서 확인'},
+  {id:'severance', type:'cart', icon:'box', badge:null, title:'퇴직금 정산', desc:'퇴직금을 받긴 했지만 계산이 맞는지 확인해본 적 없는 경우', price:'사람마다 다름 · 상담에서 확인'},
+  {id:'dismissal', type:'cart', icon:'shield', badge:null, title:'부당해고·부당징계', desc:'납득할 만한 이유 없이 갑자기 그만두게 되었거나 징계를 받은 경우', price:'사람마다 다름 · 상담에서 확인'},
+  {id:'lounge', type:'link', target:'tool-lounge', icon:'chat', badge:'✨ 실시간', bling:true, title:'우리동네 사람들 이러쿵저러쿵', desc:'같은 고민 하는 사람들과 익명으로 댓글·좋아요 나누기', price:'무료 · 익명'},
+  {id:'temperature', type:'link', target:'tool-temperature', icon:'thermo', badge:'✨ 이번 주 집계', bling:true, title:'우리동네 날씨', desc:'이번 주 우리동네 노동자들의 신호를 확인하고 나도 남기기', price:'무료 · 익명'},
+];
+
+let cart = [];
+
+function renderProducts(){
+  const grid = document.getElementById('productGrid');
+  grid.innerHTML = PRODUCTS.map(p => {
+    const badgeCls = p.bling ? 'badge gold' : 'badge';
+    const btnHtml = p.type === 'link'
+      ? '<button class="add-btn" onclick="scrollToId(\''+p.target+'\')">확인하러 가기</button>'
+      : '<button class="add-btn" id="btn-'+p.id+'" onclick="toggleItem(\''+p.id+'\')">담아두기</button>';
+    return '<div class="card'+(p.bling?' bling':'')+'">'+
+      (p.badge ? '<div class="'+badgeCls+'">'+p.badge+'</div>' : '')+
+      ICONS[p.icon]+
+      '<h3>'+p.title+'</h3>'+
+      '<p>'+p.desc+'</p>'+
+      '<div class="price-row"><span class="label">'+(p.type==='cart'?'회수 가능 금액':'이용 방법')+'</span><span class="value">'+p.price+'</span></div>'+
+      btnHtml+
+    '</div>';
+  }).join('');
+}
+
+function toggleItem(id){
+  const idx = cart.indexOf(id);
+  const btn = document.getElementById('btn-'+id);
+  if(idx === -1){
+    cart.push(id);
+    if(btn){ btn.textContent = '담았습니다'; btn.classList.add('added'); }
+  } else {
+    cart.splice(idx,1);
+    if(btn){ btn.textContent = '담아두기'; btn.classList.remove('added'); }
+  }
+  updateCartUI();
+}
+
+function updateCartUI(){
+  document.getElementById('cartCount').textContent = cart.length;
+  const body = document.getElementById('drawerBody');
+  if(cart.length === 0){
+    body.innerHTML = '<div class="drawer-empty">아직 담아두신 항목이 없습니다.<br>진열대에서 해당하는 항목을 담아보세요.</div>';
+  } else {
+    body.innerHTML = cart.map(id => {
+      const p = PRODUCTS.find(x=>x.id===id);
+      return '<div class="drawer-item"><div><div class="ti">'+p.title+'</div><div class="td">'+p.desc+'</div></div>'+
+        '<button class="rm-btn" onclick="toggleItem(\''+id+'\')">빼기</button></div>';
+    }).join('');
+  }
+}
+
+function openCart(){
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+  trackEvent('cart_opened', {});
+}
+function closeCart(){
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+renderProducts();
+updateCartUI();
 
 /* ---------------- 연봉비교 (실질시급 계산 포함) ---------------- */
 const salaryEl = document.getElementById('salary');
@@ -702,10 +924,55 @@ const SALARY_BENCHMARKS = [
   { label:'중위소득', value: 2880000 * 12 },
   { label:'전체 평균', value: 3750000 * 12 },
 ];
+/* 국세청 근로소득 백분위(천분위) 자료, 2024년 귀속 기준 추정치 — 근로소득자 약 2,108만명 대상, 총급여(비과세 제외) 비교.
+   [연봉(만원), 상위 백분율] 쌍. 표에 없는 중간값은 선형보간, 표 범위를 벗어나면 양 끝값으로 고정(clamp).
+   주의: 위 SALARY_BENCHMARKS(국가데이터처, 임금근로일자리 소득)와는 통계 출처가 달라 중위/평균 숫자가 미세하게 다를 수 있음 — 각각 출처를 표기함. */
+const SALARY_PERCENTILE_TABLE = [
+  [1000,86],[1100,85],[1200,84],[1300,83],[1400,82],[1500,80],[1600,79],[1700,78],[1800,77],[1900,76],
+  [2000,75],[2100,73],[2200,72],[2300,71],[2400,69],[2500,67],[2600,64],[2700,62],[2800,60],[2900,59],
+  [3000,57],[3100,55],[3200,53],[3300,51],[3400,50],[3500,48],[3600,47],[3700,45],[3800,43],[3900,42],
+  [4000,41],[4100,40],[4200,38],[4300,37],[4400,36],[4500,35],[4600,34],[4700,33],[4800,32],[4900,31],
+  [5000,30],[5100,29],[5200,28],[5300,28],[5400,27],[5500,26],[5600,25],[5700,25],[5800,24],[5900,23],
+  [6000,23],[6100,22],[6200,21],[6300,21],[6400,20],[6500,20],[6600,19],[6700,19],[6800,18],[6900,18],
+  [7000,17],[7100,17],[7200,16],[7300,16],[7400,15],[7500,15],[7600,15],[7700,14],[7800,14],[7900,13],
+  [8000,13],[8100,13],[8200,12],[8300,12],[8400,12],[8500,11],[8600,11],[8700,11],[8800,10],[8900,10],
+  [9000,10],[9100,10],[9200,9],[9300,9],[9400,9],[9500,8],[9600,8],[9700,8],[9800,8],[9900,8],
+  [10000,7],[10500,6],[11000,6],[11500,5],[12000,4],[12500,4],[13000,4],[13500,3],[14000,3],[14500,3],
+  [15000,2],[15500,2],[16000,2],[16500,2],[17000,2],[17500,1],[18000,1],[18500,1],[19000,1],[19500,1],
+  [20000,0.9],[21000,0.8],[22000,0.7],[23000,0.6],[24000,0.6],[25000,0.5],[27000,0.5],[30000,0.4],
+  [35000,0.2],[40000,0.2],[50000,0.1],[100000,0.1]
+];
+function getSalaryPercentile(salaryManwon){
+  const t = SALARY_PERCENTILE_TABLE;
+  if(salaryManwon <= t[0][0]) return t[0][1];
+  if(salaryManwon >= t[t.length-1][0]) return t[t.length-1][1];
+  for(let i=0;i<t.length-1;i++){
+    const [x1,y1] = t[i], [x2,y2] = t[i+1];
+    if(salaryManwon >= x1 && salaryManwon <= x2){
+      const ratio = (salaryManwon - x1) / (x2 - x1);
+      return y1 + (y2 - y1) * ratio;
+    }
+  }
+  return null;
+}
 function renderSalaryCompare(mySalary){
   const el = document.getElementById('salaryCompare');
+  const pctEl = document.getElementById('salaryPercentile');
   if(!el) return;
-  if(mySalary <= 0){ el.innerHTML = ''; return; }
+  if(mySalary <= 0){ el.innerHTML = ''; if(pctEl) pctEl.innerHTML=''; return; }
+  if(pctEl){
+    const salaryManwon = Math.round(mySalary/10000);
+    const pct = getSalaryPercentile(salaryManwon);
+    const pctDisplay = pct < 1 ? pct.toFixed(1) : Math.round(pct);
+    pctEl.innerHTML =
+      '<div class="percentile-callout">'+
+        '<div class="percentile-label">내 소득 수준은 어느 정도일까?</div>'+
+        '<div class="percentile-value">근로소득자 중 상위 <b>약 '+pctDisplay+'%</b></div>'+
+        '<div class="percentile-bar-track"><div class="percentile-bar-fill" style="width:'+(100-Math.min(pct,100))+'%"></div><div class="percentile-marker" style="left:'+(100-Math.min(pct,100))+'%"></div></div>'+
+        '<div class="percentile-scale-labels"><span>하위</span><span>상위</span></div>'+
+        '<p class="compose-note" style="text-align:left; margin-top:12px;">💡 국세청 근로소득 백분위(천분위) 자료(2024년 귀속) 기준 추정치 · 근로소득자 약 2,108만명 대상 · 총급여(비과세 제외) 비교</p>'+
+      '</div>';
+  }
   const rows = [{ label:'내 연봉', value:mySalary, mine:true }, ...SALARY_BENCHMARKS];
   const maxVal = Math.max(...rows.map(r=>r.value));
   el.innerHTML = rows.map(r=>{
@@ -774,7 +1041,6 @@ calcUnpaid();
 [upSalaryEl, upOtHoursEl, upMonthsEl].forEach(el=>el.addEventListener('change', ()=>{
   trackEvent('unpaid_calculated', {});
 }));
-
 /* ---------------- 위험도 진단 ---------------- */
 const riskQuestions = [
   {q:'근로계약서를 직접 받아서 가지고 있나요?', opts:[{t:'네, 사본을 갖고 있어요', v:0},{t:'회사에만 있고 저는 못 받았어요', v:2}]},
@@ -801,7 +1067,7 @@ function renderRisk(){
     el.innerHTML = '<div class="quiz-result"><span class="risk-badge '+cls+'">위험도 '+level+'</span>'+
       '<h3>진단 점수 '+riskScore+' / '+RISK_MAX_SCORE+'</h3>'+
       '<p class="lede" style="margin-bottom:6px;">'+msg+'</p>'+
-      '<button class="share-btn" onclick="showSection(\'temperature\')">🌡 다른 사람들의 노동 신호 보기</button>'+
+      '<button class="share-btn" onclick="scrollToId(\'tool-temperature\')">🌡 다른 사람들의 노동 신호 보기</button>'+
       '<button class="restart-link" onclick="riskIdx=0;riskScore=0;renderRisk();">다시 진단하기</button></div>';
     trackEvent('risk_complete', { level: level });
     return;
@@ -818,101 +1084,6 @@ function renderRisk(){
 }
 function answerRisk(v){ trackEvent('risk_question_answered', { question_index: riskIdx }); riskScore += v; riskIdx++; renderRisk(); }
 renderRisk();
-
-/* ---------------- 회사 MBTI ---------------- */
-/* OCAI(Organizational Culture Assessment Instrument, Cameron & Quinn)의 6개 차원 구조를 그대로 따름.
-   각 차원마다 Clan/Adhocracy/Market/Hierarchy 4개 문장에 100점을 나눠 배분(ipsative scoring) —
-   원본 설문 문항의 표현을 그대로 옮기지 않고, 각 차원이 다루는 내용을 독자적으로 다시 서술함.
-   원본은 "지금(Now)"과 "바라는 회사(Preferred)" 두 번 측정하지만, 여기서는 Now만 다룸. */
-const ocaiDimensions = [
-  { name:'지배적 특성', sub:'한마디로 분위기', statements:{
-      Clan:'완전 한 가족 분위기예요. 다들 서로 시시콜콜한 것까지 다 알아요.',
-      Adhocracy:'다이나믹 그 자체예요. 다들 일단 저질러보고 봐요.',
-      Market:'숫자가 전부예요. 목표 달성 아니면 의미 없다는 분위기예요.',
-      Hierarchy:'매뉴얼이 곧 법이에요. 정해진 대로만 움직여요.'
-  }},
-  { name:'조직 리더십', sub:'상사는 어떤 스타일?', statements:{
-      Clan:'상사가 츤데레 삼촌 같아요. 잔소리는 해도 다 챙겨줘요.',
-      Adhocracy:'상사 입버릇이 "일단 해봐"예요. 못 말리지만 밉지 않아요.',
-      Market:'상사는 숫자만 봐요. 결과 없으면 대화가 잘 안 통해요.',
-      Hierarchy:'상사는 절차의 화신이에요. 순서 건너뛰면 큰일 나요.'
-  }},
-  { name:'구성원 관리 방식', sub:'팀을 다루는 방식', statements:{
-      Clan:'다 같이 가자 주의예요. 혼자 튀면 은근 눈치 보여요.',
-      Adhocracy:'각자 알아서 소신껏! 자유롭지만 가끔 방치되는 느낌도 나요.',
-      Market:'꽤 치열해요. 실적 안 나오면 바로 티가 나요.',
-      Hierarchy:'규정대로만 하면 안전해요. 대신 재량은 별로 없어요.'
-  }},
-  { name:'조직을 묶는 힘', sub:'뭐가 우릴 붙잡고 있나', statements:{
-      Clan:'정(情)으로 굴러가요. 미운정 고운정 다 있어요.',
-      Adhocracy:'"우리가 뭔가 새로운 걸 만든다"는 그 텐션으로 버텨요.',
-      Market:'"이겨야 한다"는 목표의식이 다 같이 붙잡고 있는 힘이에요.',
-      Hierarchy:'규정집이 접착제예요. 그거 없으면 다 흩어질 것 같아요.'
-  }},
-  { name:'전략적 강조점', sub:'뭘 제일 신경 써요', statements:{
-      Clan:'사람 키우는 데 진심이에요. 신뢰와 소통을 최우선으로 여겨요.',
-      Adhocracy:'새로운 거 없나 늘 촉각을 곤두세워요. 도전이 일상이에요.',
-      Market:'경쟁사 이기는 데 올인해요. 시장 1등이 목표예요.',
-      Hierarchy:'흔들리지 않는 안정감이 최고의 가치예요.'
-  }},
-  { name:'성공의 기준', sub:'뭘 잘했다고 쳐요', statements:{
-      Clan:'다 같이 잘 지내면, 그게 성공이에요.',
-      Adhocracy:'세상에 없던 걸 만들면, 그게 성공이에요.',
-      Market:'경쟁사보다 잘하면, 그게 성공이에요.',
-      Hierarchy:'삐걱거림 없이 굴러가면, 그게 성공이에요.'
-  }},
-];
-const OCAI_TYPE_ORDER = ['Clan','Adhocracy','Market','Hierarchy'];
-const ocaiTypeInfo = {
-  Clan:{name:'관계지향형', desc:'완전 정 많은 회사예요! 근데 "가족 같다"는 말이 야근이나 사적인 부탁의 핑계로 쓰이고 있진 않은지 살짝 의심해보세요.'},
-  Adhocracy:{name:'혁신지향형', desc:'매일이 롤러코스터예요! 자유로운 건 좋은데, "알아서 해"가 사실은 책임 떠넘기기는 아닌지 체크해보세요.'},
-  Market:{name:'성과지향형', desc:'목표가 뚜렷해요! 근데 그 압박이 나를 갈아넣는 수준까지 가고 있진 않은지 살펴보세요.'},
-  Hierarchy:{name:'위계지향형', desc:'예측 가능해서 편해요! 근데 그 규정이 날 지켜주는 건지, 그냥 옭아매는 건지 구분해보세요.'},
-};
-let mbtiIdx = 0;
-let mbtiTypeCount = {Clan:0, Adhocracy:0, Market:0, Hierarchy:0};
-let mbtiStartedTracked = false;
-
-function renderMbti(){
-  const el = document.getElementById('mbtiCard');
-  if(mbtiIdx >= ocaiDimensions.length){
-    const pct = {};
-    OCAI_TYPE_ORDER.forEach(t=>{ pct[t] = Math.round((mbtiTypeCount[t] / ocaiDimensions.length) * 100); });
-    const dominant = OCAI_TYPE_ORDER.reduce((a,b)=> pct[a] >= pct[b] ? a : b);
-    const type = ocaiTypeInfo[dominant];
-    const barsHtml = OCAI_TYPE_ORDER.map(t=>
-      '<div class="temp-bar-row"><div class="temp-bar-label"><span>'+ocaiTypeInfo[t].name+' ('+t+')</span><span>'+pct[t]+'%</span></div>'+
-      '<div class="temp-bar-track"><div class="temp-bar-fill" style="width:'+pct[t]+'%"></div></div></div>'
-    ).join('');
-    el.innerHTML = '<div class="quiz-result">'+
-      '<div class="q-num">우리 회사는</div>'+
-      '<div class="mbti-code">'+type.name+'</div>'+
-      '<p class="mbti-subtitle">'+dominant+' 우세 · 학계에서 쓰는 진단법(OCAI) 기준</p>'+
-      barsHtml+
-      '<p class="lede" style="margin:16px 0 6px;">'+type.desc+'</p>'+
-      '<button class="share-btn" onclick="showSection(\'wage\')">💰 내 연봉 비교하기</button>'+
-      '<button class="restart-link" onclick="mbtiIdx=0;mbtiTypeCount={Clan:0,Adhocracy:0,Market:0,Hierarchy:0};renderMbti();">다시 진단하기</button></div>';
-    trackEvent('mbti_complete', { code: dominant, type: type.name });
-    return;
-  }
-  if(mbtiIdx === 0 && !mbtiStartedTracked){ trackEvent('mbti_started', {}); mbtiStartedTracked = true; }
-  const dim = ocaiDimensions[mbtiIdx];
-  let bars = '';
-  for(let i=0;i<ocaiDimensions.length;i++) bars += '<i class="'+(i<mbtiIdx?'done':'')+'"></i>';
-  let opts = OCAI_TYPE_ORDER.map(t=>'<button class="q-opt" onclick="answerMbti(\''+t+'\')">'+dim.statements[t]+'</button>').join('');
-  el.innerHTML = '<div class="q-progress">'+bars+'</div>'+
-    '<div class="q-num">'+(mbtiIdx+1)+' / '+ocaiDimensions.length+' · '+dim.name+' <span style="color:var(--ink-faint); font-weight:400;">('+dim.sub+')</span></div>'+
-    '<p class="q-text">우리 회사에 제일 가까운 문장 하나만 골라주세요!</p>'+
-    '<div class="q-options">'+opts+'</div>';
-}
-function answerMbti(type){
-  trackEvent('mbti_question_answered', { question_index: mbtiIdx });
-  mbtiTypeCount[type]++;
-  mbtiIdx++;
-  renderMbti();
-}
-renderMbti();
-
 /* ---------------- 성수 노동온도 (UI 로직 — Firestore 통신은 하단 module 스크립트에서 처리) ---------------- */
 const MOOD_LABELS = { good:'🙂 괜찮았어요', neutral:'😐 그냥 그랬어요', hard:'😩 힘들었어요', very_hard:'🤯 정말 힘들었어요' };
 const ISSUE_LABELS = {
@@ -999,7 +1170,7 @@ function renderTemperatureResult(responses){
     : '<p class="empty-state">아직 집계된 이슈가 없어요.</p>';
 
   card.innerHTML =
-    '<p class="eyebrow" style="margin-bottom:2px;">이번 주 성수 노동온도 · 응답 '+total+'건</p>'+
+    '<p class="eyebrow" style="margin-bottom:2px;">이번 주 우리동네 날씨 · 응답 '+total+'건</p>'+
     moodRows+
     '<p class="eyebrow" style="margin:22px 0 2px;">이번 주 가장 많이 나온 문제</p>'+
     issueRows+
@@ -1010,10 +1181,11 @@ function renderTemperatureResult(responses){
 
 function goToLoungeFromTemperature(){
   trackEvent('temperature_to_lounge', {});
-  showSection('lounge');
+  scrollToId('tool-lounge');
 }
 
 renderIssueGrid();
+enterTemperatureForm(); // 탭 시스템이 없어져서, temperature_started 이벤트를 기록하려면 로드 시 직접 한 번 호출
 
 /* ---------------- 수첩 (localStorage — 이 기기에만 저장, 서버로 전송 안 됨) ---------------- */
 /* ---------------- 좋아요: 이 기기가 이미 눌렀는지 localStorage로만 기억 ----------------
@@ -1067,7 +1239,6 @@ function addNote(){
 }
 renderNotes();
 </script>
-
 <!-- ===== 라운지 공유 게시판 (Firebase Firestore, 무료 Spark 요금제로 충분) =====
   1) console.firebase.google.com 에서 새 프로젝트 생성 (무료)
   2) 왼쪽 메뉴 Firestore Database → 데이터베이스 만들기 → 프로덕션 모드, 지역은 asia-northeast3(서울) 추천
@@ -1228,7 +1399,7 @@ renderNotes();
         '<span class="post-tag">'+safeTag+'</span><div class="post-meta">'+dateStr+'</div><p class="post-body">'+safeText+'</p>'+
         '<div class="post-actions">'+
           '<button class="like-btn'+(liked?' liked':'')+'" id="likeBtn_'+id+'" '+(liked?'disabled':'')+' onclick="likePost(\''+id+'\')">'+(liked?'❤️':'🤍')+' <span id="likeCount_'+id+'">'+likeCount+'</span></button>'+
-          '<button class="comment-toggle" onclick="toggleComments(\''+id+'\')">💬 댓글 '+commentCount+'</button>'+
+          '<button class="comment-toggle" id="commentToggle_'+id+'" onclick="toggleComments(\''+id+'\')">💬 댓글 '+commentCount+'</button>'+
         '</div>'+
         '<div class="comment-box" id="commentBox_'+id+'" style="display:none;">'+
           '<div class="comment-list" id="commentList_'+id+'"></div>'+
@@ -1279,6 +1450,10 @@ renderNotes();
       const commentsCol = collection(db, 'lounge_posts', postId, 'comments');
       const commentsQuery = query(commentsCol, orderBy('createdAt', 'asc'), limit(200));
       const snap = await getDocs(commentsQuery);
+      // 실제 댓글 수(대댓글 포함)로 토글 버튼 숫자를 항상 다시 맞춤 —
+      // commentCount 필드는 이 기능 출시 이전 댓글까지는 반영 못 했을 수 있어서, 펼칠 때마다 스스로 보정함
+      const toggleBtn = document.getElementById('commentToggle_'+postId);
+      if(toggleBtn) toggleBtn.textContent = '💬 댓글 ' + snap.size;
       if(snap.empty){
         listEl.innerHTML = '<p class="empty-state" style="font-size:0.78rem; padding:6px 0;">아직 댓글이 없어요. 첫 댓글을 남겨보세요.</p>';
         return;
@@ -1428,5 +1603,4 @@ renderNotes();
   };
 </script>
 </body>
-
 </html>
